@@ -1,0 +1,436 @@
+/* style.css - Brutalist/Terminal Theme */
+:root {
+    --bg-color: #000000;         /* Pure black background */
+    --text-color: #FFFFFF;       /* Pure white text */
+    --accent-color: white;     /* Classic green terminal accent */
+    --accent-color-dim: #999; /* Dimmer green for less emphasis */
+    --border-color: #FFFFFF;     /* White borders */
+    --font-family-monospace: 'Consolas', 'Menlo', 'Courier New', Courier, monospace;
+    --border-thickness: 1px;     /* Or 2px for more pronounced borders */
+    --border-thickness2: 3px;     /* Or 2px for more pronounced borders */
+    --region-visual-color: white;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family-monospace);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5; /* Slightly tighter for terminal feel */
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.app-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 260px; /* Slightly narrower */
+    background-color: var(--bg-color); /* Same as body, rely on border */
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    /* border-right: var(--border-thickness) solid var(--border-color); */
+}
+
+.sidebar-header h2 {
+    color: var(--accent-color);
+    font-weight: normal; /* Less emphasis */
+    margin-bottom: 15px;
+    font-size: 1.3em;
+    text-align: left; /* Terminal style */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.control-group {
+    padding-bottom: 15px;
+    border-bottom: var(--border-thickness) dashed var(--accent-color-dim); /* Dashed separator */
+}
+.control-group:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.control-group h3 {
+    font-size: 0.8em;
+    font-weight: normal;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+
+.sidebar label {
+    display: block;
+    font-size: 0.85em;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.sidebar input[type="number"],
+.sidebar select {
+
+
+
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    width: 100%;
+    padding: 8px;
+    background-color: var(--bg-color); /* Match background */
+    color: var(--text-color);
+    border: var(--border-thickness) solid var(--border-color);
+    border-radius: 0; /* No rounded corners */
+    font-size: 0.9em;
+    font-family: var(--font-family-monospace);
+
+
+
+}
+
+
+
+.sidebar {
+    scrollbar-width: none;      /* Firefox */
+    -ms-overflow-style: none;   /* Internet Explorer and Edge */
+  }
+  
+  .sidebar::-webkit-scrollbar {
+    display: none;              /* Chrome, Safari, and Opera */
+  }
+  
+
+.sidebar input[type="number"]:focus,
+.sidebar select:focus {
+    outline: var(--border-thickness) solid var(--accent-color);
+    border-color: var(--accent-color); /* Keep border consistent or change on focus */
+}
+
+/* Custom file input - Brutalist style */
+.file-upload-label {
+    display: block; /* Make it block to take full width */
+    padding: 8px 10px;
+    background-color: var(--bg-color);
+    color: var(--accent-color);
+    border: var(--border-thickness) solid var(--accent-color);
+    cursor: pointer;
+    text-align: center;
+    font-weight: normal;
+    width: 100%;
+    margin-bottom: 10px; /* Add some space below */
+}
+.file-upload-label:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+}
+.file-upload-label input[type="file"] {
+    display: none;
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 8px 10px;
+    border: var(--border-thickness) solid var(--text-color);
+    border-radius: 0;
+    font-size: 0.9em;
+    font-weight: normal;
+    font-family: var(--font-family-monospace);
+    cursor: pointer;
+    margin-bottom: 8px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+.btn:hover:not(:disabled) {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+.btn:active:not(:disabled) {
+    background-color: var(--accent-color-dim);
+    color: var(--bg-color);
+    border-color: var(--accent-color-dim);
+}
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-color: var(--accent-color-dim);
+    color: var(--accent-color-dim);
+}
+
+.btn.btn-primary { /* Primary action might use accent color */
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+.btn.btn-primary:hover:not(:disabled) {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+}
+
+.btn.btn-danger {
+    border-color: var(--text-color); /* Keep it simple or use accent for warning */
+    color: var(--text-color);
+}
+.btn.btn-danger:hover:not(:disabled) {
+    background-color: var(--accent-color); /* Or a red if you must */
+    color: var(--bg-color);
+    border-color: var(--accent-color);
+}
+
+
+.size-inputs {
+    display: flex;
+    gap: 10px;
+}
+.size-inputs > div {
+    flex: 1;
+}
+
+
+
+
+
+
+#filterParamsContainer h4 {
+    font-size: 0.8em;
+    font-weight: normal;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    margin-top: 0;
+
+
+}
+#filterParamsContainer:empty {
+    display: none;
+}
+/* Ensure params container has a top border if it follows activeRegionControls and has content */
+#activeRegionControls:not([style*="display: none"]) ~ #filterParamsContainer:not(:empty),
+#activeRegionControls[style*="display: block"] ~ #filterParamsContainer:not(:empty) {
+    padding-top: 15px;
+    border-top: var(--border-thickness) dashed var(--accent-color-dim);
+    margin-top: 15px;
+}
+
+
+.param-control {
+    margin-bottom: 10px;
+}
+.param-control label {
+    font-weight: normal;
+    color: var(--text-color);
+}
+.param-control input[type="range"] {
+    width: 100%;
+    vertical-align: middle;
+    /* Basic range styling for dark mode */
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: var(--accent-color-dim);
+    outline: none;
+    border: var(--border-thickness) solid var(--border-color);
+}
+.param-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: var(--accent-color);
+    border: var(--border-thickness) solid var(--bg-color);
+    cursor: pointer;
+}
+.param-control input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: var(--accent-color);
+    border: var(--border-thickness) solid var(--bg-color);
+    cursor: pointer;
+    border-radius: 0;
+}
+.param-control span {
+    font-size: 0.8em;
+    color: var(--text-color);
+    
+    vertical-align: middle;
+}
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    overflow: auto;
+    position: relative;
+    background-color: var(--bg-color); /* Ensure it's black */
+}
+
+#imageContainer {
+    position: relative;
+    /* border: var(--border-thickness) solid var(--border-color); */
+    box-shadow: none; /* No shadow */
+    width: fit-content;
+    height: fit-content;
+    cursor: default;
+}
+#imageContainer.has-image {
+    cursor: crosshair;
+}
+
+#displayCanvas {
+    display: block;
+    /* max-width/height handled by main-content and image itself */
+    /* object-fit: contain; */ /* This might interfere with exact pixel mapping */
+}
+
+.inputsection {
+    margin-bottom: 10px;
+}
+
+
+
+
+
+/* --- Outer Wrapper: Handles positioning, size, and the ::before ribbon --- */
+.filter-region-wrapper {
+    position: absolute; /* Positioned by JS */
+    /* width and height set by JS */
+    overflow: visible;  /* Allows its ::before (ribbon) to be seen */
+    pointer-events: none; /* Wrapper itself doesn't capture mouse events by default.
+                             Events should pass to the .filter-region div below if it's a child. */
+    /* No border, no background on this wrapper itself */
+    z-index: 10; /* Default z-index, active one will be higher */
+}
+
+/* The ribbon is ::before on the WRAPPER */
+.filter-region-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    /* Adjust 'left' to account for the border of the inner .filter-region.
+       If .filter-region has a left border of var(--border-thickness),
+       and you want the ribbon to start at the very edge of that border: */
+    left: 0;
+    transform: translateY(-98%);
+    width: 40%; /* Your desired width */
+    max-width: 120px;
+    height: 20px; /* Your desired height */
+    background-color: var(--region-visual-color, var(--accent-color)); /* Uses custom prop from wrapper */
+    pointer-events: none; /* Ribbon doesn't capture events */
+    min-width: 60px;
+}
+
+
+
+
+.filter-region {
+    width: 100%; /* Takes full width of its wrapper */
+    height: 100%; /* Takes full height of its wrapper */
+    box-sizing: border-box;
+    /* Border color now uses the custom property set on its PARENT wrapper */
+    border: var(--border-thickness) solid var(--region-visual-color, var(--accent-color));
+    background-color: transparent; /* Or filter content background */
+    cursor: grab; /* Default cursor for interaction */
+    overflow: hidden; /* THIS CLIPS THE CONTENT (PixiJS canvas etc.) */
+    border-radius: 0.06em; /* Your preferred radius */
+    position: relative; /* Good practice for children */
+    pointer-events: auto; /* This div *should* receive mouse events */
+}
+
+/* Active State */
+.filter-region-wrapper.active-wrapper { /* Apply to wrapper for z-index */
+    z-index: 1000 !important;
+}
+
+
+
+.filter-region-content-clipper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* THIS CLIPS THE ACTUAL FILTER CONTENT */
+    position: relative; /* If content inside needs absolute positioning */
+    background-color: transparent; /* Or a debug color */
+    /* If your filters (like PixiJS) set a background on their canvas, that's fine */
+}
+
+
+
+.filter-region.active {
+    border-width: 2px; /* Make active border thicker */
+    /* border-color: var(--accent-color);  */
+    box-shadow: none;
+    z-index: 1000 !important;
+}
+.filter-region.active:hover {
+     /* JS handles cursor for resize/move */
+}
+
+.filter-region:hover:not(.active) {
+    border-color: var(--accent-color-dim);
+}
+
+.welcome-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--accent-color);
+    font-size: 1.1em;
+}
+
+.welcome-message.hidden {
+    display: none;
+}
+
+/* Initial state of controls */
+#activeRegionControls {
+    display: none; /* JS will manage */
+}
+
+/* Remove default hr styling */
+.sidebar hr { /* This was in HTML, but we're not using it anymore, or style if you do */
+    display: none;
+}
+
+
+
+
+/* Add to your current style.css */
+.color-palette-container {
+    margin-top: 15px; /* Add some space above it */
+}
+
+.color-palette {
+    display: flex;
+    flex-wrap: nowrap;  /* Prevent swatches from wrapping */
+    gap: 5px;           /* Space between swatches */
+    margin-top: 5px;
+}
+
+.color-swatch {
+    flex-grow: 1;       /* Allow swatches to stretch */
+    height: 20px;       /* Size of the color square */
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.color-swatch.selected {
+    border-color: #333; /* Example: darker border for selected */
+    box-shadow: inset 0 0 0 2px white, inset 0 0 0 3px #333; /* Example selected look */
+}
