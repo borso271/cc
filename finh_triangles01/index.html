@@ -61,7 +61,20 @@
 
 
         #frameArea{flex:1;display:flex;flex-direction:column;overflow:auto; min-height: 100vh;}
-        #frameContainer{margin:auto;border:1px solid #000;background:#e0e0e0;position:relative;transition:width .3s ease,height .3s ease;overflow:hidden;}
+
+
+
+        
+
+        #frameContainer{margin:auto;
+            /* border:1px solid #000; */
+            outline: 1px solid #000; /* ‼️ sits *outside* the box-model */
+  /* outline-offset: 1px;     */
+            background:#e0e0e0;position:relative;transition:width .3s ease,height .3s ease;overflow:hidden;}
+
+
+
+
         #triangularGridContainer{position:absolute;top:0;left:0;pointer-events:none;}
         
         #triangularGridContainer svg path{stroke:var(--grid-stroke,#000);fill:none;stroke-opacity:.15;stroke-width:1;}
