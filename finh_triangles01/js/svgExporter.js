@@ -31,7 +31,7 @@ export function generateInnerShapesSVGString(width, height) {
       if (!d) return;
   
       const fill    = poly.color || '#808080';
-      svg += `  <path d="${d}" fill="${fill}" stroke="${fill}" stroke-width="1" />\n`;
+      svg += `  <path d="${d}" fill="${fill}"/>\n`;
     });
   
     /* 3. wrap in the outer <svg> tag ------------------------------------ */
@@ -105,7 +105,7 @@ export function generateFullSVGString (width, height, geo) {
     const d      = getRoundedPolygonPath(poly.inner, innerR);
     if (!d) return;
     const fill   = poly.color || '#808080';
-    svg += `  <path d="${d}" fill="${fill}" stroke="${fill}" stroke-width="1" />\n`;
+    svg += `  <path d="${d}" fill="${fill}" />\n`;
   });
 
   /* 4. outer <svg> wrapper ------------------------------------------- */
