@@ -5,45 +5,6 @@ import { state as appState } from './appState.js'; // To access finishedPolygons
 import { getRoundedPolygonPath } from './polygonToRoundedPath.js'; // To generate path data
 import { SVG_NS } from './utils.js'; // For consistency, though not strictly needed for string building
 
-// /**
-//  * Generates an SVG string containing only the inner rounded polygons.
-//  * @param {number} width - The width of the SVG canvas (e.g., frameProps.outerWidth).
-//  * @param {number} height - The height of the SVG canvas (e.g., frameProps.outerHeight).
-//  * @returns {string} - The complete SVG string.
-//  */
-// export function generateInnerShapesSVGString(width, height) {
-//     let svgPaths = '';
-
-//     appState.finishedPolygons.forEach(polyData => {
-//         if (polyData.inner && polyData.inner.length > 2) {
-//             // Use a slightly smaller radius for inner polygons if desired, or same as outer
-//             const innerCornerRadius = appState.currentCornerRadius > 0 
-//                 ? Math.max(1, appState.currentCornerRadius / 1.2) 
-//                 : 0;
-            
-//             const roundedInnerPathData = getRoundedPolygonPath(polyData.inner, innerCornerRadius);
-            
-//             if (roundedInnerPathData) {
-//                 // Get the color for this polygon
-//                 const fillColor = polyData.color || '#808080'; // Default to gray
-//                 // For downloaded SVG, we might want no stroke or a consistent one
-//                 const strokeColor = fillColor; // Or 'none' or 'black'
-//                 const strokeWidth = "1";       // Or "0" for no stroke
-
-//                 svgPaths += `  <path d="${roundedInnerPathData}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${strokeWidth}" />\n`;
-//             }
-//         }
-//     });
-
-//     // Construct the full SVG string
-//     const svgString = `<svg width="${width}" height="${height}" xmlns="${SVG_NS}">
-// ${svgPaths}</svg>`;
-
-//     return svgString;
-// }
-
-
-
 /**
  * Returns an SVG string that contains
  *   • one solid <rect> that covers the entire canvas (background colour)
@@ -77,3 +38,76 @@ export function generateInnerShapesSVGString(width, height) {
     return `<svg width="${width}" height="${height}" xmlns="${SVG_NS}">\n${svg}</svg>`;
   }
   
+
+
+
+
+
+  /* ⇢ already-existing helper unchanged …  generateInnerShapesSVGString() */
+
+/* ─────────────────────────────────────────────────────────────────── */
+/* NEW: full export – background + triangular grid + inner polygons   */
+
+/**
+ * Creates ONE consolidated SVG file that contains
+ *   • the solid background rectangle
+ *   • the full triangular grid (honouring its left / top offset)
+ *   • every finished *inner* rounded polygon
+ *
+ * @param {number} width   frame outer-width  in px
+ * @param {number} height  frame outer-height in px
+ * @param {object} geo     latest geometry object from GridGenerator
+ * @return {string}        complete <svg> markup
+ */
+export function generateFullSVGString (width, height, geo) {
+  if (!geo || geo.error) return '';
+
+  /* colour & geometry helpers ------------------------------------------ */
+  const bg    = appState.frameBgColor   || '#ffffff';
+  const gridC = appState.gridStrokeColor|| '#000000';
+  const r     = appState.currentCornerRadius;
+
+  const dx    = geo.gridContainerLeftOffset;   // same on-screen shift
+  const dy    = geo.gridContainerTopOffset;
+
+  /* 1. background rectangle ------------------------------------------- */
+  let svg = `  <rect x="0" y="0" width="${width}" height="${height}" fill="${bg}" />\n`;
+
+  /* 2. GRID paths – identical maths to on-screen draw ----------------- */
+  const { h_triangle:h, s_triangle:s,
+          y_pattern_origin_visual_top:y0, patternStartX_svg:startX,
+          j0, j1, i0, i1 } = geo;
+
+  let gridPaths = '';
+  for (let j = j0; j < j1; j++) {
+    const yTip  = y0 + j * h;
+    const yBase = yTip + h;
+    const off   = (j & 1) ? s / 2 : 0;
+
+    for (let i = i0; i < i1; i++) {
+      const x0 = startX + i * s + off;
+
+      gridPaths +=
+        `    <path d="M ${x0} ${yBase} L ${x0 + s/2} ${yTip} L ${x0 + s} ${yBase} Z"\n` +
+        `          fill="none" stroke="${gridC}" stroke-width="1" stroke-opacity="0.15"/>\n`+
+        `    <path d="M ${x0+s/2} ${yTip} L ${x0+s} ${yBase} L ${x0+1.5*s} ${yTip} Z"\n` +
+        `          fill="none" stroke="${gridC}" stroke-width="1" stroke-opacity="0.15"/>\n`;
+    }
+  }
+
+  /* wrap grid in a translating <g> so it lands where the user saw it */
+  svg += `  <g transform="translate(${dx},${dy})">\n${gridPaths}  </g>\n`;
+
+  /* 3. inner rounded polygons ---------------------------------------- */
+  appState.finishedPolygons.forEach(poly => {
+    if (!poly.inner || poly.inner.length < 3) return;
+    const innerR = r > 0 ? Math.max(1, r / 1.2) : 0;
+    const d      = getRoundedPolygonPath(poly.inner, innerR);
+    if (!d) return;
+    const fill   = poly.color || '#808080';
+    svg += `  <path d="${d}" fill="${fill}" stroke="${fill}" stroke-width="1" />\n`;
+  });
+
+  /* 4. outer <svg> wrapper ------------------------------------------- */
+  return `<svg width="${width}" height="${height}" xmlns="${SVG_NS}">\n${svg}</svg>`;
+}

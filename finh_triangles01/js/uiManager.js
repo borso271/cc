@@ -9,11 +9,31 @@ import * as PolygonDrawer from './polygonDrawer.js'; // For button actions
 import * as ColorManager from './colorManager.js'; // Import new manager
 import { bestGridStroke } from './utils.js';
 
+import * as SVGExporter  from './svgExporter.js';
+import { generateInnerShapesSVGString } from './svgExporter.js';
+import { generateFullSVGString } from './svgExporter.js';
 // helpers ---------------------------------------------------------
 function isPxMode () {
     // whatever control you use – adjust selector accordingly
     const sel = document.getElementById('paddingMode');
     return !sel || sel.value === 'px';
+  }
+
+
+
+/* tiny helper reused by both buttons -------------------- */
+function triggerDownload(svgText, fileName) {
+    const blob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+  
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  
+    URL.revokeObjectURL(url);
   }
 
 export function getInputValues() {
@@ -64,7 +84,7 @@ export function appendToDimensionsDisplay(text) {
 
 import * as ShapeSelection from './shapeSelectionAndModification.js'; // For updateSelectedShapeActionsUI
 
-import { generateInnerShapesSVGString } from './svgExporter.js'; // Assuming you created svgExporter.js
+// import { generateInnerShapesSVGString } from './svgExporter.js'; // Assuming you created svgExporter.js
 // Or if you put it in polygonDrawer.js:
 // import { generateInnerShapesSVGString } from './polygonDrawer.js'; 
 
@@ -135,25 +155,6 @@ export function setupEventListeners(updateCallback) {
       });
 
 
-
-
-    // // Padding Input Listener
-    // if (DOMElements.paddingInput) {
-    //     DOMElements.paddingInput.addEventListener('input', () => {
-    //         const newPadding = parseFloat(DOMElements.paddingInput.value) || 0;
-    //         appState.currentPadding = newPadding;
-
-    //         if (!appState.isCornerRadiusManuallySet) {
-    //             const newRadius = Math.max(0, newPadding / 2);
-    //             appState.currentCornerRadius = newRadius;
-    //             if (DOMElements.cornerRadiusSlider) DOMElements.cornerRadiusSlider.value = newRadius;
-    //             if (DOMElements.cornerRadiusValueDisplay) DOMElements.cornerRadiusValueDisplay.textContent = `${newRadius.toFixed(1)} px`;
-    //         }
-    //         updateCallback();
-    //     });
-    // } else {
-    //     console.warn("UI: paddingInput not found.");
-    // }
 
 // Padding <input> listener  --------------------------------------
 if (DOMElements.paddingInput) {
@@ -241,6 +242,35 @@ if (DOMElements.paddingInput) {
     } else {
         console.warn("UI: downloadSvgBtn element not found.");
     }
+
+
+    /* NEW listener ------------------------------------------------------ */
+if (DOMElements.downloadFullSvgBtn) {
+    DOMElements.downloadFullSvgBtn.addEventListener('click', () => {
+      const w = appState.lastFrameWidth;
+      const h = appState.lastFrameHeight;
+      const geo = appState.latestGeo;             // set in step 3
+  
+      if (!geo || geo.error) {
+        alert('Grid not ready – draw something first!');
+        return;
+      }
+  
+      const svg = generateFullSVGString(w, h, geo);
+      downloadSVG(svg, 'grid_and_shapes.svg');
+    });
+  } else {
+    console.warn('UI: downloadFullSvgBtn element not found.');
+  }
+
+
+
+
+
+
+
+
+
 
 
 

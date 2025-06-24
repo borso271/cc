@@ -23,6 +23,10 @@ export const clearSelectionBtn = document.getElementById('clearSelectionBtn');
 export const finishPolygonBtn = document.getElementById('finishPolygonBtn');
 export const downloadSvgBtn = document.getElementById('downloadSvgBtn');
 
+
+export const downloadFullSvgBtn = document.getElementById('downloadFullSvgBtn');
+
+
 export const toggleOuterPolygonVisibilityBtn = document.getElementById('toggleOuterPolygonVisibilityBtn');
 export const frameBg = document.getElementById('frameBg');
 

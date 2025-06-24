@@ -8,6 +8,8 @@ import * as PolygonOffset from './js/polygonOffset.js'; // Ensure this path is c
 import { state as appState } from './js/appState.js';
 import * as ShapeSelection from './js/shapeSelectionAndModification.js'; // <<< 1. IMPORT IT
 import { bestGridStroke } from './js/utils.js';
+import * as DOMElements  from './js/domElements.js';
+
 /* ------------------------------------------------------- *
  *  global caches                                          */
 let lastCalculatedFrameProps     = null;
@@ -93,6 +95,7 @@ function updateAppView(forceSnapPointRecalc = false) {
 
     if (!geo.error && geo.h_triangle > 0.001 && geo.s_triangle > 0.001) {
       lastCalculatedGridGeoParams = geo;
+      appState.latestGeo         = geo;
     //   const svg = GridGenerator.createGridSVGElement(geo);
 
 
@@ -139,7 +142,6 @@ if (inputs.padding !== lastPadding) {
   UIManager.updateDrawingActionButtonsVisibility?.();
 
 }
-
 
 
 

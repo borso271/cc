@@ -60,10 +60,6 @@
         /* ─── CANVAS AREA ────────────────────────────────────────────── */
 
 
-
-
-
-
         #frameArea{flex:1;display:flex;flex-direction:column;overflow:auto; min-height: 100vh;}
         #frameContainer{margin:auto;border:1px solid #000;background:#e0e0e0;position:relative;transition:width .3s ease,height .3s ease;overflow:hidden;}
         #triangularGridContainer{position:absolute;top:0;left:0;pointer-events:none;}
@@ -98,7 +94,8 @@
             display:flex;
             width: 100%;
             align-items:center;
-            justify-content:center
+            justify-content:center;
+            gap: 12px;
         }
     </style>
 </head>
@@ -121,11 +118,10 @@
 
         <label for="padding">Margin M</label>
 <div class="inline-flex">
-  <input  type="number" id="padding" value="0.15" min="0" step="0.01">
-  <select id="paddingMode">          
-    <option value="ratio">× side</option>       <!-- NEW -->
-      <option value="px">px</option>
-     
+  <input  type="number" id="padding" value="20" min="0" step="0.01">
+  <select id="paddingMode">   
+    <option value="px">px</option>       
+    <option value="ratio">× side</option>
   </select>
 </div>
 
@@ -165,10 +161,10 @@
 
             <label for="gridAlignment">Grid Horizontal Align</label>
             <select id="gridAlignment">
-               
+                <option value="center">Center</option>
                 <option value="left">Left</option>
                 <option value="right">Right</option>
-                <option value="center">Center</option>
+                
             </select>
 
            <div class="buttonsGroup">
@@ -186,9 +182,24 @@
             <svg id="selectionOverlay"></svg>
         </div>
 
-        <div class="dbContainer">
-        <button id="downloadSvgBtn" style="grid-column: 1 / -1; border:none;margin-top: 10px; height:40px; width:auto; background-color: black; color: white; padding:12px">Download Inner Shapes SVG</button>
+    
+
+
+    <div class="dbContainer">
+        <button id="downloadSvgBtn"
+                style="border:none;margin-top:10px;height:40px;
+                       background:black;color:#fff;padding:12px">
+            Download Inner-Shapes SVG
+        </button>
+    
+        <!-- NEW -->
+        <button id="downloadFullSvgBtn"
+                style="border:none;margin-top:10px;height:40px;
+                       background:black;color:#fff;padding:12px">
+            Download Full SVG
+        </button>
     </div>
+
         <div class="info" id="dimensionsInfo">
         </div>
 
