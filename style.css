@@ -1,0 +1,98 @@
+/* Global */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  display: flex;
+  font-family: monospace;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: #fff;
+  border-right: 4px solid #000;
+  padding: 20px;
+}
+.sidebar h1 {
+  font-size: 1.5em;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #000;
+  padding-bottom: 0.5rem;
+}
+.controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+.controls label {
+  font-weight: bold;
+}
+.controls input,
+.controls select,
+.controls button {
+  font-family: inherit;
+  font-size: 1em;
+  border: 4px solid #000;
+  background: none;
+  color: #000;
+  padding: 0.5rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.controls input[type="range"] {
+  border: none;
+}
+.slider-group {
+  display: flex;
+  align-items: center;
+}
+.slider-group span {
+  margin-left: 0.5rem;
+}
+.color-input {
+  display: flex;
+}
+.color-input input {
+  flex: 1;
+}
+.color-input button {
+  border-left: none;
+}
+.color-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.color-swatch {
+  width: 20px;
+  height: 20px;
+  border: 4px solid #000;
+}
+
+/* Main Frame */
+main#frameContainer {
+  flex: 1;
+  position: relative;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#triangularGridContainer svg path {
+  stroke: #000;
+  stroke-width: 1;
+  fill: none;
+}
+#selectionOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.info {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 0.8em;
+}

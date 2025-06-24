@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frame Creator — Brutalist Sidebar</title>
+
+    <!-- Brutalist style + ADVANCED‑toggle logic → IDs preserved for main.js -->
+    <style>
+        /* ─── GLOBAL RESET ────────────────────────────────────────────── */
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        /* html,body{height:100%;} */
+        body{display:flex;font-family:"Courier New",monospace;background:#fff;color:#000;line-height:1.4;}
+
+        /* ─── SIDEBAR CONTROLS ───────────────────────────────────────── */
+        .controls{width:260px;border-right:2px solid #000;padding:20px 16px;overflow:auto;scrollbar-width:none;-ms-overflow-style:none;}
+        .controls::-webkit-scrollbar{display:none;}
+        .controls h1{font-size:1.5rem;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.05em;}
+        .controls label{font-weight:700;margin-top:12px;margin-bottom:4px;display:block;}
+        .controls input,.controls select,.controls button{width:100%;padding:8px 6px;border:2px solid #000;background:transparent;font-size:.9rem;}
+
+         /* Custom SELECT: remove default arrow & add our own with breathing room */
+         .controls select{
+            width:100%;
+            padding:8px 30px 8px 6px; /* extra right-padding for custom arrow */
+            border:2px solid #000;
+            background:transparent;
+            font-size:.9rem;
+            -webkit-appearance:none;appearance:none; /* hide native chevron */
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h10L5 6z' fill='%23000'/%3E%3C/svg%3E");
+            background-repeat:no-repeat;
+            background-position:right 10px center; /* 10px from border */
+            background-size:10px 6px;
+        }
+        .controls input:focus,.controls select:focus{outline:none;background:#f3f3f3;}
+        .controls button{cursor:pointer;font-weight:700;}
+        .controls button:hover{background:#000;color:#fff;}
+        .controls button.active{background:#000;color:#fff;}
+        .inline-flex{display:flex;gap:8px;align-items:center;}
+        #cornerRadiusSlider{flex:1;}
+        #cornerRadiusValue{min-width:48px;}
+        .color-palette{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;border:2px solid #000;padding:4px;}
+        .color-swatch{width:26px;height:26px;border:2px solid #000;cursor:pointer;}
+        .color-swatch.selected{outline:2px solid #000;}
+
+        /* Advanced toggle button */
+        .advanced-toggle-btn{width:100%;margin-top:12px;padding:8px 6px;border:2px solid #000;background:transparent;font-weight:700;cursor:pointer;}
+        .advanced-toggle-btn:hover{background:#000;color:#fff;}
+
+        /* Advanced section hidden by default */
+        #advancedControls{display:none;}
+
+        /* ─── RANGE SLIDER (Rectangular Track + Square Thumb) ────────── */
+        .controls input[type=range]{-webkit-appearance:none;appearance:none;width:100%;background:transparent;padding:0;cursor:pointer;height:26px;}
+        .controls input[type=range]::-webkit-slider-runnable-track{height:22px;background:transparent;border:2px solid #000;}
+        .controls input[type=range]::-moz-range-track{height:22px;background:transparent;border:2px solid #000;}
+        .controls input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;background:#000;border:2px solid #000;margin-top:-1px;cursor:ew-resize;}
+        .controls input[type=range]::-moz-range-thumb{width:20px;height:20px;background:#000;border:2px solid #000;cursor:ew-resize;}
+
+        /* ─── CANVAS AREA ────────────────────────────────────────────── */
+
+
+
+
+
+
+        #frameArea{flex:1;display:flex;flex-direction:column;overflow:auto; min-height: 100vh;}
+        #frameContainer{margin:auto;border:1px solid #000;background:#e0e0e0;position:relative;transition:width .3s ease,height .3s ease;overflow:hidden;}
+        #triangularGridContainer{position:absolute;top:0;left:0;pointer-events:none;}
+        
+        #triangularGridContainer svg path{stroke:var(--grid-stroke,#000);fill:none;stroke-opacity:.15;stroke-width:1;}
+        #selectionOverlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+        /* #selectionOverlay polyline.current-polygon-segment,#selectionOverlay polygon.finished-polygon{stroke:var(--grid-stroke,#000);stroke-width:2;fill:rgba(0,0,0,.05);}#selectionOverlay circle.selected-point{fill:var(--grid-stroke,#000);stroke:var(--grid-stroke,#0000ff);stroke-width:2; r:5px} */
+
+
+        #selectionOverlay
+  polyline.current-polygon-segment,
+#selectionOverlay
+  polygon.finished-polygon {
+  stroke: var(--grid-stroke, #000);      /* fallback black */
+  stroke-width: 2;
+  fill: rgba(0,0,0,.05);
+}
+
+#selectionOverlay circle.selected-point {
+  fill:   var(--grid-stroke, #000);
+  stroke: var(--grid-stroke, #000);
+  stroke-width: 2;
+  r: 5px;
+}
+
+        /* ─── INFO BAR ───────────────────────────────────────────────── */
+        .info{border-top:2px solid #000;background:#f8f8f8;padding:8px;font-size:.8rem;text-align:center;}
+
+        .buttonsGroup {display: flex; margin: 12px 0; gap: 12px;}
+
+        .dbContainer {
+            display:flex;
+            width: 100%;
+            align-items:center;
+            justify-content:center
+        }
+    </style>
+</head>
+<body>
+    <!-- ── FIXED SIDEBAR ── -->
+    <aside class="controls" id="sidebar">
+        <h1>Finh Tool 01</h1>
+
+        <!-- Always‑visible controls -->
+        <label for="aspectRatio">Aspect Ratio</label>
+        <select id="aspectRatio">
+            <option value="1:1">1:1 (Square)</option>
+            <option value="4:5">4:5 (Portrait)</option>
+            <option value="9:16">9:16 (Tall Portrait)</option>
+            <option value="16:9">16:9 (Widescreen)</option>
+            <option value="4:3">4:3 (Classic TV)</option>
+            <option value="3:2">3:2 (Classic Photo)</option>
+            <option value="2:1">2:1 (Panoramic)</option>
+        </select>
+
+        <label for="padding">Margin M</label>
+<div class="inline-flex">
+  <input  type="number" id="padding" value="0.15" min="0" step="0.01">
+  <select id="paddingMode">          
+    <option value="ratio">× side</option>       <!-- NEW -->
+      <option value="px">px</option>
+     
+  </select>
+</div>
+
+        <!-- Toggle button -->
+
+        <label for="colorInput">New Color (hex)</label>
+        <div class="inline-flex">
+            <input type="text" id="colorInput" value="#FF0000" placeholder="#RRGGBB">
+            <button id="addColorBtn">Add</button>
+        </div>
+
+        <label>Color Palette</label>
+        <div id="colorPaletteContainer" class="color-palette"></div>
+
+        <button id="advancedToggleBtn" class="advanced-toggle-btn">Show Advanced ▼</button>
+
+        <!-- Hidden advanced controls -->
+        <div id="advancedControls">
+            <label for="frameWidth">Frame Width (px)</label>
+            <input type="number" id="frameWidth" value="500" min="50" max="2000">
+
+            <label for="numTriangles">Triangles by Height (in padded area)</label>
+            <input type="number" id="numTriangles" value="7" min="1" max="50">
+
+            <label for="cornerRadiusSlider">Corner Radius</label>
+            <div class="inline-flex">
+                <input type="range" id="cornerRadiusSlider" min="0" max="50" value="10" step="1">
+                <span id="cornerRadiusValue">10&nbsp;px</span>
+            </div>
+
+            <button id="toggleOuterPolygonVisibilityBtn" style="grid-column: 1 / -1; margin-top: 5px;">Show Outer Polygons</button>
+
+
+            <label for="frameBg">Frame Background</label>
+<input type="color" id="frameBg" value="#ffffff">
+
+
+            <label for="gridAlignment">Grid Horizontal Align</label>
+            <select id="gridAlignment">
+               
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+                <option value="center">Center</option>
+            </select>
+
+           <div class="buttonsGroup">
+            <button id="clearSelectionBtn" style="display:none;">Clear Current Polygon</button>
+            <button id="finishPolygonBtn" style="display:none;">Finish Polygon</button>
+        </div>
+        
+        </div>
+    </aside>
+
+    <!-- ── DRAWING AREA ── -->
+    <div id="frameArea">
+        <div id="frameContainer">
+            <div id="triangularGridContainer"></div>
+            <svg id="selectionOverlay"></svg>
+        </div>
+
+        <div class="dbContainer">
+        <button id="downloadSvgBtn" style="grid-column: 1 / -1; border:none;margin-top: 10px; height:40px; width:auto; background-color: black; color: white; padding:12px">Download Inner Shapes SVG</button>
+    </div>
+        <div class="info" id="dimensionsInfo">
+        </div>
+
+    </div>
+
+    <!-- same JS file as before -->
+    <script type="module" src="main.js"></script>
+
+    <!-- Tiny inline script to toggle advanced controls -->
+    <script>
+        (function(){
+            const btn = document.getElementById('advancedToggleBtn');
+            const panel = document.getElementById('advancedControls');
+            btn.addEventListener('click',()=>{
+                const hidden = panel.style.display==='none' || panel.style.display==='';
+                panel.style.display = hidden ? 'block' : 'none';
+                btn.textContent = hidden ? 'Hide Advanced ▲' : 'Show Advanced ▼';
+            });
+        })();
+    </script>
+</body>
+</html>
