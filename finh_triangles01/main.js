@@ -22,7 +22,6 @@ function updateAppView(forceSnapPointRecalc = false) {
 
   /* 1. sync state with UI ------------------------------------------- */
   // appState.currentPadding      = inputs.padding;
-  appState.currentCornerRadius = inputs.cornerRadius;
 
   appState.gridStrokeColor = bestGridStroke(appState.frameBgColor);
 
@@ -62,6 +61,7 @@ function updateAppView(forceSnapPointRecalc = false) {
   /* 3. frame -------------------------------------------------------- */
   const frameProps = FrameCalculator.calculateFrameProperties(inputs);
   appState.currentPadding      = frameProps.padding;      // real px
+  appState.currentCornerRadius = frameProps.padding/2;
 
   FrameCalculator.renderFrameDOM(frameProps);
   lastCalculatedFrameProps = frameProps;
