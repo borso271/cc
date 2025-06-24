@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Image Filter Editor</title> <!-- Or your previous title if you prefer -->
+    <link rel="stylesheet" href="style.css"> <!-- Your WORKING style.css -->
+    <!-- Optional: Add a modern font like Inter or a system font stack -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container"> 
+        <aside class="sidebar">
+            <header class="sidebar-header">
+                <h2>Finh Filter Editor</h2>
+            </header>
+
+            <section class="control-group">
+                <label for="imageUpload" class="file-upload-label">
+                    <span>Upload Image</span>
+                    <input type="file" id="imageUpload" accept="image/*">
+                </label>
+            </section>
+
+            <section class="control-group">
+                <h3>Region Tools</h3>
+                <button id="addRegionBtn" class="btn btn-primary">Add Region</button>
+                <button id="deleteRegionBtn" class="btn btn-danger" disabled>Delete Selected</button>
+            </section>
+
+            <section class="control-group" id="activeRegionControls" style="display: none;"> <!-- JS will show/hide this -->
+                <h3>Active Region</h3>
+                <div class="inputsection">
+                    <label for="filterSelect">Filter:</label>
+                    <select id="filterSelect"> <!-- This select should be enabled/disabled by JS -->
+                        <option value="none">None</option>
+                        <!-- Options will be dynamically added here -->
+                    </select>
+                </div>
+                <div class="size-inputs inputsection">
+                    <div>
+                        <label for="regionWidthInput">Width:</label>
+                        <input type="number" id="regionWidthInput" value="100" min="10" step="1"> <!-- JS enables/disables -->
+                    </div>
+                    <div>
+                        <label for="regionHeightInput">Height:</label>
+                        <input type="number" id="regionHeightInput" value="100" min="10" step="1"> <!-- JS enables/disables -->
+                    </div>
+                </div>
+
+                <!-- ****** NEW: COLOR PALETTE STRUCTURE ****** -->
+                <div class="color-palette-container">
+                    <label>Region Color:</label>
+                    <div id="regionColorPalette" class="color-palette">
+                        <!-- Example Swatches (JS will generate these dynamically later) -->
+                        <!-- You can add a few static ones for layout testing if you want -->
+                        <div class="color-swatch" style="background-color: #00FF00;" data-color="#00FF00"></div> 
+                        <!-- <div class="color-swatch" style="background-color: #FF00FF;" data-color="#FF00FF"></div> -->
+                        <!-- <div class="color-swatch" style="background-color: #00FFFF;" data-color="#00FFFF"></div> -->
+                    </div>
+                </div>
+                <!-- ****** END NEW: COLOR PALETTE STRUCTURE ****** -->
+
+            </section>
+
+            <div id="filterParamsContainer" class="control-group">
+                <!-- Filter-specific parameters UI for the active region will go here -->
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div id="imageContainerWrapper">
+                <div id="imageContainer">
+                    <canvas id="displayCanvas"></canvas>
+                    <!-- Filter region DIVs will be dynamically added here -->
+                </div>
+            </div>
+             <div id="welcomeMessage" class="welcome-message">
+                <p>Upload an image to start editing.</p>
+            </div>
+        </main>
+    </div>
+
+    <canvas id="originalCanvas" style="display: none;"></canvas>
+
+    <!-- Your JS library includes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.0/pixi.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pixi-filters@5.2.1/dist/browser/pixi-filters.js"></script>
+    <script type="module" src="script.js"></script> <!-- Your WORKING script.js -->
+</body>
+</html>
