@@ -60,8 +60,8 @@ export function drawFinishedPolygons(polygons) {
         const p = document.createElementNS(SVG_NS, 'path');
         p.setAttribute('d', d);
         p.style.fill = color;
-        p.style.stroke = isSelected ? strokeColSel : color;
-        p.style.strokeWidth = isSelected ? strokeWidthSel : strokeWidthInner;
+        // p.style.stroke = isSelected ? strokeColSel : color;
+        // p.style.strokeWidth = isSelected ? strokeWidthSel : strokeWidthInner;
         p.style.fillOpacity = isSelected ? fillOpacitySel : '1';
         overlay.appendChild(p);
       }
