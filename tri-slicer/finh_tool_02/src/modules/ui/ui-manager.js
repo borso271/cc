@@ -106,10 +106,10 @@ function setupThemeSwitcher() {
   const body = document.body;
 
   const palettes = [
-    
+    { name: 'Dark',    className: 'theme-dark' },
     { name: 'Dracula', className: 'theme-dracula' },
     { name: 'Solar',   className: 'theme-solarized' },
-    { name: 'Dark',    className: 'theme-dark' },
+   
     { name: 'Light',   className: 'theme-light' },
     
   ];

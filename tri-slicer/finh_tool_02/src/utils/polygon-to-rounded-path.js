@@ -63,6 +63,7 @@ function normalizePoint(p) {
 
 // ... (helper functions: subtractPoints, addPoints, scalePoint, vectorLength, normalizePoint - keep these as they are) ...
 
+
 export function getRoundedPolygonPath(points, cornerRadius) {
 
     console.log("get rounded calld with inputs: ", points, cornerRadius)
