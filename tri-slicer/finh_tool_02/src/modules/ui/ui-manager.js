@@ -263,7 +263,12 @@ document.addEventListener('keydown', e => {
   } else if (e.key === 'R' || (e.key==='r' && e.shiftKey)){
     store.applyTransform(p => p.rotate(5));     // -60°  (5 ≡ -1 mod 6)
   } else if (e.key.toLowerCase() === 'm'){
-    store.applyTransform(p => p.mirror());
+    store.applyTransform(p => p.mirror()
+
+    
+  );
+   
+    
   }
 });
 

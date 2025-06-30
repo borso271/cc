@@ -24,6 +24,21 @@
     <button id="downloadSvgAndMeshBtn">Download SVG + Mesh</button>
   </div>
 
+
+
+  <!-- Quick-tips (add anywhere in the sidebar) -->
+<div class="section" style="font-size:.8rem;line-height:1.3">
+  <p class="section-title">Hints</p>
+  <ul style="margin:0;padding-left:1.2em">
+    <li><b>Drag</b> a selected shape to move it</li>
+    <li>Press <kbd>R</kbd> to rotate&nbsp;(+60°)</li>
+    <li>Press <kbd>Shift</kbd>+<kbd>R</kbd> to rotate&nbsp;(&minus;60°)</li>
+    <li>Press <kbd>M</kbd> to mirror</li>
+  </ul>
+</div>
+
+
+
   <!-- Slice-style controls -->
 <div class="section">
   <p class="section-title">Slice&nbsp;Style</p>
@@ -90,8 +105,6 @@
       <button class="num-btn plus">＋</button>
     </div>
 
-
-    
   </div>
 
   <div class="section advanced">
@@ -177,10 +190,8 @@
   <g id="polygonLayer"  class="edit-only"></g>
   <g id="tempLayer"                    ></g>
   <g id="frameLayer"     class="edit-only" ></g>  
-  <!-- just below the existing frameLayer -->
+ 
 <g id="previewFrameLayer" visibility="hidden"></g>
-
-
   <g id="vertexLayer"   class="edit-only"></g>
   <g id="axisGuides"    class="edit-only"></g>
   <g id="clipLayer"                    ></g>  

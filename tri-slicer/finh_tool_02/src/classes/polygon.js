@@ -126,26 +126,58 @@ export class Polygon {
       _logPoly(this,'rotate AFTER');
     }
   
-mirror(){
-   
-  }
-  
+/** mirror around the vertical axis through the pose origin */
+
+/* ─ inside class Polygon ─────────────────────────────────────── */
+/** mirror across a *vertical* pixel axis through the pose origin */
+
+
+/* ─ inside class Polygon ─────────────────────────────────────── */
+/** mirror across a vertical pixel axis through the pose origin */
+mirror () {
+  _logPoly(this, 'mirror BEFORE');
+
+  /* flip edge-handedness */
+  this.pose.F ^= 1;
+
+  /* adjust rotation (mirror turns +k into –k) */
+  this.pose.R = (6 - this.pose.R) % 6;
+
+  _logPoly(this, 'mirror AFTER');
+}
+
+
     /* ───────── lattice vertices iterator ─────────────────────── */
     *vertices(){
-      const { q:Tq, r:Tr, R, F } = this.pose;
-      const fx = F ? -1 : 1;
+          const { q:Tq, r:Tr, R, F } = this.pose;
+      
+          // helper: mirror a local axial vertex when F == 1
+          const mirrorAxial = (q,r) => F ? [-q - r, r] : [q, r];
+      
+          /* every vertex */
+          for (let i = 0; i < this.verts.length; i += 2) {
+            const [q0, r0] = mirrorAxial(this.verts[i], this.verts[i + 1]);
+            let [q, r]     = Polygon.rotVertex(q0, r0, R);
+            yield [q + Tq, r + Tr];
+          }
+          /* close loop — repeat first */
+          const [q0, r0]   = mirrorAxial(this.verts[0], this.verts[1]);
+          const [qc, rc]   = Polygon.rotVertex(q0, r0, R);
+          yield [qc + Tq, rc + Tr];
+
+      // const { q:Tq, r:Tr, R, F } = this.pose;
+      // const fx = F ? -1 : 1;
   
-      for (let i=0;i<this.verts.length;i+=2){
-        const q0 = this.verts[i] * fx;
-        const r0 = this.verts[i+1];
-        let [q,r] = Polygon.rotVertex(q0,r0,R);
-        yield [q+Tq, r+Tr];
-      }
-      /* close loop */
-      let [q1,r1] = Polygon.rotVertex(this.verts[0]*fx,this.verts[1],R);
-      yield [q1+Tq, r1+Tr];
+      // for (let i=0;i<this.verts.length;i+=2){
+      //   const q0 = this.verts[i] * fx;
+      //   const r0 = this.verts[i+1];
+      //   let [q,r] = Polygon.rotVertex(q0,r0,R);
+      //   yield [q+Tq, r+Tr];
+      // }
+      // /* close loop */
+      // let [q1,r1] = Polygon.rotVertex(this.verts[0]*fx,this.verts[1],R);
+      // yield [q1+Tq, r1+Tr];
     }
-  
 
 
 /* ============================================================== */
@@ -162,8 +194,6 @@ mirror(){
           r * H                                    // y
         ]);
       
-
-
         /* B — bounding box in axial ------------------------------- */
   
         const qs = pixV.map(([x,y]) => (x - y / Math.sqrt(3)) / side);

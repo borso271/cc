@@ -157,18 +157,12 @@ selectAndHighlight(id){
 }
 
 
-
-
-
-
 addPolygonInstance(poly){
   this.state.polygons.push(poly);
   this.emit();
   return poly.id;
 }
 
-
-  
     emit(){ this.dispatchEvent(new Event('change')); }
 
 
