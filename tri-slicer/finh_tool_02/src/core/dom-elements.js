@@ -30,6 +30,7 @@ export const vertexHitLayer = query('#vertexHitLayer');
 
 export const debugMaskLayer = query('#debugMaskLayer');
 
+export const previewFrameLayer = query('#previewFrameLayer');
 
 // /* ─── hook the new inputs ─────────────────────────────────── */
 // const padIn = sidebar.querySelector('#padIn');

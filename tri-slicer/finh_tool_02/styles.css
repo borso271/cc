@@ -350,19 +350,20 @@ body.show-adv .advanced { display: flex !important; }   /* or block */
 }
 
 
-/* in styles.css (or <style>) */
-.hidden-layer { display:none; }
-.toggle-btn   { width:100%; margin:.25rem 0; }
-.toggle-btn.active { background:#222; color:#fff; }
 
 
-/* sidebar-buttons already use .active — reuse it for visibility */
-svg .hidden { display:none }
 
-/* accent frame shown only in preview */
+
+/* optional styling */
 .preview-frame {
   fill:none;
   stroke:black;
   stroke-width:1.5;
-  pointer-events:none;   /* never capture clicks */
+  pointer-events:none;
 }
+
+.edit-only    { display:block; }
+.preview-only { display:none; }
+
+body.preview .edit-only    { display:none; }
+body.preview .preview-only { display:block; }

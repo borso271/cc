@@ -18,7 +18,8 @@
   <!-- ② Always-visible controls -->
   <div class="button-group-stacked">
     <button id="resetBtn">Reset All</button>
-    <button id="tglAll"      class="toggle-btn">Preview</button>
+    <button id="tglPreview" class="toggle-btn">Preview</button>
+
     <button id="downloadSvgBtn">Download SVG</button>
     <button id="downloadSvgAndMeshBtn">Download SVG + Mesh</button>
   </div>
@@ -167,6 +168,29 @@
      
       <div id="canvasInner">
         <svg id="gridSvg" width="2000" height="1200">
+
+
+
+
+        
+
+          
+
+  <g id="meshLayer"     class="edit-only"></g>
+  <g id="polygonLayer"  class="edit-only"></g>
+  <g id="tempLayer"                    ></g>
+  <g id="frameLayer"     class="edit-only" ></g>  
+  <!-- just below the existing frameLayer -->
+<g id="previewFrameLayer" visibility="hidden"></g>
+
+
+  <g id="vertexLayer"   class="edit-only"></g>
+  <g id="axisGuides"    class="edit-only"></g>
+  <g id="clipLayer"                    ></g>  
+  <g id="vertexHitLayer"></g>
+
+
+<!-- 
           <g id="meshLayer"></g>
           <g id="polygonLayer"></g>
           <g id="tempLayer"></g>
@@ -174,7 +198,7 @@
           <g id="vertexLayer"></g>
           <g id="axisGuides"></g>
           <g id="clipLayer"></g>
-          <g id="vertexHitLayer"></g>     <!-- NEW: invisible click targets -->
+          <g id="vertexHitLayer"></g>    -->
 
           <g id="debugMaskLayer" pointer-events="none" opacity="0.45"></g>
 
@@ -217,5 +241,8 @@
   <script type="module" src="src/main.js"></script>
 </body>
 </html>
+
+
+
 
 

@@ -318,6 +318,7 @@ export function buildGridModel () {
 export function drawFullGrid () {
   const state   = store.state;
   const density = state.density;
+ 
 
   /* --- grid geometry ----------------------------------------- */
   const SIDE  = C.BASE_SIDE / density;
@@ -351,7 +352,6 @@ export function drawFullGrid () {
     outline.addEventListener('pointerdown',
       e => Interactions.onPolyPointerDown(e, poly));
 
-  
 
 
     if (state.selectedId === poly.id)
@@ -427,6 +427,27 @@ export function drawFullGrid () {
     });
   });
 
+
+
+
+
+  // ----- enlarged bleeding frame ---------------------------------
+const pf = DOM.previewFrameLayer;
+pf.innerHTML = '';                       // nuke whatever was there
+
+const pad = store.padPx;                 // current padding in px
+const f   = store.state.frame;
+
+const rowH = C.H_FROM_SIDE(SIDE);
+
+const big = document.createElementNS(C.NS,'rect');
+big.setAttribute('x', f.x - pad);
+big.setAttribute('y', f.y - pad);
+big.setAttribute('width',  f.widthMult  * SIDE + pad*2);
+big.setAttribute('height', f.heightMult * rowH + pad*2);
+big.setAttribute('fill',   'none');
+big.setAttribute('stroke', 'var(--foreground)');
+pf.appendChild(big);
   /* --- vertices LAST so they sit above everything ------------ */
   Renderer.drawVertices(vertices, Interactions.handleVertexClick);
 }

@@ -3,7 +3,6 @@ import { store } from '../../core/store.js';
 import * as C from '../../core/constants.js';
 import { H } from '../../utils.js';
 import * as DOM from '../../core/dom-elements.js';
-
 const sidebar = document.getElementById('sidebar');
 // shorthand query helper
 const qs = (sel, root = document) => root.querySelector(sel);
@@ -386,52 +385,17 @@ toggleBtn.onclick = () => {
 /* ------------------------------------------------------------ */
 /* layer-toggle helpers                                         */
 /* ------------------------------------------------------------ */
-const LAYERS = {
-  mesh     : DOM.meshLayer,
-  verts    : DOM.vertexLayer,
-  axis     : DOM.axisGroup,
-  outlines : DOM.polygonLayer
-};
+const tPreview = document.getElementById('tglPreview');
 
-/* ---- individual toggles ------------------------------------ */
-[
-  { id:'#tglMesh',     key:'mesh'     },
-  { id:'#tglVerts',    key:'verts'    },
-  { id:'#tglAxis',     key:'axis'     },
-  { id:'#tglOutlines', key:'outlines' }
-].forEach(({id,key})=>{
-  const btn   = sidebar.querySelector(id);
-  const layer = LAYERS[key];
 
-  btn.classList.add('active');              // initial = visible
 
-  btn.onclick = ()=>{
-    const hidden = layer.classList.toggle('hidden-layer');
-    btn.classList.toggle('active', !hidden);
-    syncAllBtnState();                      // keep “All” in sync
-  };
-});
 
-/* ---- “All” toggle ------------------------------------------ */
-const allBtn = sidebar.querySelector('#tglAll');
-allBtn.classList.add('active');             // everything visible
-
-function syncAllBtnState(){
-  const anyHidden = Object.values(LAYERS)
-                    .some(l => l.classList.contains('hidden-layer'));
-  allBtn.classList.toggle('active', !anyHidden);
-}
-
-allBtn.onclick = ()=>{
-  // If ANY target layer is hidden → show all, else hide all.
-  const shouldShow = Object.values(LAYERS)
-                     .some(l => l.classList.contains('hidden-layer'));
-  Object.entries(LAYERS).forEach(([key,layer])=>{
-    layer.classList.toggle('hidden-layer', !shouldShow);
-    const btn = sidebar.querySelector(`#tgl${key[0].toUpperCase()+key.slice(1)}`);
-    btn.classList.toggle('active', shouldShow);
-  });
-  allBtn.classList.toggle('active', shouldShow);
+tPreview.onclick = () => {
+  document.body.classList.toggle('preview');   // swaps classes
+  tPreview.classList.toggle('active');         // darken button
+  const g = DOM.previewFrameLayer;
+  const vis = g.getAttribute('visibility');
+  g.setAttribute('visibility', vis === 'hidden' ? 'visible' : 'hidden');
 };
 
 
@@ -443,6 +407,7 @@ allBtn.onclick = ()=>{
 /* shape library                                              */
 /* ------------------------------------------------------------------ */
 import { SHAPE_LIBRARY } from '../../library/shapes.js';
+import { drawFullGrid } from '../grid/index.js';
 
 
 

@@ -9,7 +9,8 @@ export function drawFrame(frameData, SIDE) {
     const hPx = frameData.heightMult * C.H_FROM_SIDE(SIDE);
     
     frameRect = document.createElementNS(C.NS, 'rect');
-    frameRect.classList.add('frame');
+   // frameRect.classList.add('frame');
+    frameRect.classList.add('frame', 'edit-only');   // hide in Preview
     frameRect.setAttribute('x', frameData.x);
     frameRect.setAttribute('y', frameData.y);
     frameRect.setAttribute('width', wPx);
