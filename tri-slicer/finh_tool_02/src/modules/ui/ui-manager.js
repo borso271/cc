@@ -448,7 +448,7 @@ SHAPE_LIBRARY.forEach(item => {
    ------------------------------------------------------------------ */
    sidebar.insertAdjacentHTML(
     'beforeend',
-    `<button id="exportShapeBtn" style="margin-top:.5rem">📋 Export selected shape</button>`
+    `<button class="invisible" id="exportShapeBtn" style="margin-top:.5rem">📋 Export selected shape</button>`
   );
   
   const exportBtn = sidebar.querySelector('#exportShapeBtn');
