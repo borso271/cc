@@ -45,6 +45,8 @@ function handleSidebarInput(e) {
     }
 }
 
+
+
 function handleSidebarClick(e) {
     const target = e.target;
 

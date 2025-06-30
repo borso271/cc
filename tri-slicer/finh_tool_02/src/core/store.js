@@ -24,19 +24,7 @@ export const store = new (class extends EventTarget {
 
     // ─── pre-filled with a demo polygon ─────────────────────────
     polygons : [] ,
-    
-    // (function makeStarterShape () {
-    //   /* 2×2 “diamond” of triangles centred at (0,0) */
-    //   const mask = new Set([
-    //     triKey(0,0,0), triKey(0,0,1),
-    //     triKey(1,0,0), triKey(1,0,1),
-    //     triKey(0,1,0), triKey(0,1,1),
-    //     triKey(1,1,0), triKey(1,1,1)
-    //   ]);
-
-    //   const poly = maskToPolygon(mask, 'hsl(30 90% 60%)');
-    //   return [poly];                       // array of Polygon instances
-    // })(),
+  
 
     frame    : { ratio:[1,1], widthMult:null, heightMult:7, x:0, y:0 },
        /* new slice-style parameters (pixel units) */

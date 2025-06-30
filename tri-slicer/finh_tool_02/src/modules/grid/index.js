@@ -7,6 +7,7 @@ import { Renderer } from './render/index.js';
 import * as Interactions from './grid-interactions.js';
 import { clipWithFrame } from '../../utils/clip-with-frame.js';
 import { getSlices } from '../../utils/clip-with-frame.js';
+import { placeFrame } from './grid-interactions.js';
 // --- Module-level State ---
 let vertices = [];
 
@@ -142,17 +143,25 @@ export function buildGridModel () {
   }
 
   /* ---- auto-centre only on very first build ----------------- */
-  if (f.x === 0 && f.y === 0) {
-    const gridW = (COLS - 1) * SIDE + SIDE;
-    const gridH = (ROWS - 1) * C.H_FROM_SIDE(SIDE);
-    const wPx   = f.widthMult  * SIDE;
-    const hPx   = f.heightMult * C.H_FROM_SIDE(SIDE);
+  // if (f.x === 0 && f.y === 0) {
+  //   const gridW = (COLS - 1) * SIDE + SIDE;
+  //   const gridH = (ROWS - 1) * C.H_FROM_SIDE(SIDE);
+  //   const wPx   = f.widthMult  * SIDE;
+  //   const hPx   = f.heightMult * C.H_FROM_SIDE(SIDE);
 
-    store.patchFrame({
-      x: (gridW - wPx) / 2,
-      y: (gridH - hPx) / 2
-    });
-  }
+  //   store.patchFrame({
+  //     x: (gridW - wPx) / 2,
+  //     y: (gridH - hPx) / 2
+  //   });
+
+
+    
+  // }
+
+  if (f.x === 0 && f.y === 0) {
+        placeFrame('top', 'center');     // <-- use your helper
+      }
+
 }
 
 

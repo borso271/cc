@@ -64,7 +64,7 @@ export function handleCanvasClick() {
 }
 
 
-export function placeFrame(vChoice = null, hChoice = null) {
+export function placeFrame(vChoice = "top", hChoice = "center") {
     const density  = store.state.density;
     const SIDE     = BASE_SIDE / density;
     const ROW_H    = H(SIDE);                 // pixel height of one grid row
