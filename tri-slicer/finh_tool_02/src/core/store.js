@@ -26,14 +26,10 @@ export const store = new (class extends EventTarget {
 
     // ─── pre-filled with a demo polygon ─────────────────────────
     polygons : [] ,
-  
-
     frame    : { ratio:[1,1], widthMult:null, heightMult:7, x:0, y:0 },
-       /* new slice-style parameters (pixel units) */
     currentFill : '#678BFF',   // ← default “current colour”
     pad     : 8,
     radius  : 6,
-
     padRatio    : 0.10,     // fraction of ONE triangle side (0-1)
     radiusPx    : null,     // if null → auto = padPx/2
     preview : false   ,     // ← NEW  presentation-mode flag,
@@ -88,7 +84,8 @@ export const store = new (class extends EventTarget {
               return (C.BASE_SIDE / this.state.density) * this.state.padRatio;
             }
             get radiusPx() {
-              return this.state.radiusPx ?? this.padPx / 2;
+              console.log("RADIUS PX STA", this.padPx)
+              return this.state.radiusPx ?? this.padPx;
             }
             
 
