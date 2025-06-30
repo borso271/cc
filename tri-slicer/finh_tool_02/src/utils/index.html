@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Triangle‑mask ⇄ Polygon quick test</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 1rem; }
+    pre  { background:#f3f3f3; padding:.5rem 1rem; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <h1>Polygon ↔ Triangle‑Mask Demo</h1>
+  <p>Open DevTools → Console to see the output. The page builds a sample
+     mask, converts it to a <code>Polygon</code>, then back to a mask and
+     checks equality.</p>
+
+  <pre id="log"></pre>
+
+  <script type="module">
+    import { triKey, maskToPolygon, polygonToMask } from './polygon-mask-utils.js';
+
+    // ----- build a sample filled mask: a 2×2 diamond -------------------
+    //  (q,r,up)  ▼ up=0   ▲ up=1
+    const mask = new Set([
+      triKey(0,0,0),  triKey(0,0,1),
+      triKey(1,0,0),  triKey(1,0,1),
+      triKey(0,1,0),  triKey(0,1,1),
+      triKey(1,1,0),  triKey(1,1,1)
+    ]);
+
+    // ----- convert mask → Polygon --------------------------------------
+    const poly = maskToPolygon(mask, 'hsl(30 90% 60%)');
+
+    // ----- convert back -------------------------------------------------
+    const mask2 = polygonToMask(poly, triKey);
+
+    // ----- equality check ---------------------------------------------
+    const same = mask.size === mask2.size && [...mask].every(k => mask2.has(k));
+
+    // ----- log ---------------------------------------------------------
+    const out = document.getElementById('log');
+    out.textContent = [
+      `mask size:  ${mask.size}`,
+      `poly verts: ${poly.verts.length/2}`,
+      `same mask after round‑trip?  ${same}`,
+      '',
+      'poly.verts →', JSON.stringify([...poly.verts]),
+      'poly.pose  →', JSON.stringify(poly.pose),
+      'canon      →', poly.canon
+    ].join('\n');
+  </script>
+</body>
+</html>

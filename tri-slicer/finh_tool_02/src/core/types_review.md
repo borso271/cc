@@ -1,0 +1,17 @@
+NODES
+
+
+
+
+
+
+POLYGONS
+
+
+
+
+
+
+GRID (ADDING THE TRIANGLES)
+
+

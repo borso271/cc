@@ -1,0 +1,311 @@
+/* =================================================================== */
+/*            MINIMAL BRUTALIST THEME 3.2  (LIGHT-WEIGHT)             */
+/* =================================================================== */
+
+/* ─── 1. Palette & Radii ───────────────────────────────────────────── */
+:root {
+    --background: #161616;
+    --foreground: #ffffff;
+    --accent:     #007bff;
+    --transition: 0.25s;
+  
+    --container-radius: 0.4rem;   /* softer, smaller */
+    --control-radius:   0.5rem;
+  }
+  body.theme-light { --background:#fafafa; --foreground:#161616; }
+  body.theme-solarized { --background:#002b36; --foreground:#b5c6dd; --accent:#268bd2; }
+  body.theme-dracula  { --background:#282a36; --foreground:#f8f8f2; --accent:#6272a4; }
+  
+  /* ─── 2. Global Reset ─────────────────────────────────────────────── */
+  *{box-sizing:border-box;transition:background-color var(--transition),color var(--transition),border-color var(--transition),box-shadow var(--transition);}
+  html,body{height:100%;margin:0;background:var(--background);color:var(--foreground);font-family:'Inter',sans-serif;line-height:1.4;}
+  
+  /* ─── 3. Layout ──────────────────────────────────────────────────── */
+  #container{display:flex;height:100%;overflow:hidden;}
+  #sidebar{
+    width:240px;                           /* narrower */
+                           /* tighter */
+    background:var(--background);
+    display:flex;flex-direction:column;gap:1.1rem;
+    overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;
+  }
+  #sidebar::-webkit-scrollbar{width:0;height:0;}
+  /* #svgWrap{flex:1;overflow:auto;} */
+  
+  /* ─── 4. Header ──────────────────────────────────────────────────── */
+  .header-controls{display:flex;flex-direction:column;gap:0.75rem;padding-bottom:0.25rem;}
+  #sidebar h1{font-size:1.1rem;margin:0;text-align:center;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;}
+  
+  /* ─── 5. Sections ───────────────────────────────────────────────── */
+  #sidebar .section{
+    background:var(--background);
+    border:1px solid var(--foreground);           /* thinner */
+    border-radius:var(--container-radius);
+    padding:0.75rem;                              /* tighter */
+    display:flex;flex-direction:column;gap:0.6rem;
+  }
+  #sidebar .section-title{font-size:0.8rem;letter-spacing:0.04em;margin:0;text-transform:uppercase;}
+  
+  /* ─── 6. Labels & Controls ─────────────────────────────────────── */
+  #sidebar label{font-size:0.8rem;}               /* smaller text */
+  #sidebar input[type="number"],
+  #sidebar input[type="range"],
+  #sidebar select,
+  #sidebar button{
+    width:100%;
+    padding:0.55em 0.8em;                         /* slimmer */
+    font-size:0.85rem;
+    background:var(--background);color:var(--foreground);
+    border:1px solid var(--foreground);           /* thinner */
+    border-radius:var(--control-radius);
+    appearance:none;outline:none;
+  }
+  
+  #sidebar button{cursor:pointer;font-weight:600;}
+  
+  #sidebar input:focus,
+  #sidebar select:focus,
+  #sidebar button:hover,
+  #sidebar button:focus{
+     /* background:var(--foreground);color:var(--background); */
+    box-shadow:0 0 0 2px rgba(255,255,255,0.15);  /* subtler */
+  }
+
+  #sidebar button:hover,
+  #sidebar button:active{
+      background:var(--foreground);color:var(--background); */
+    box-shadow:0 0 0 2px rgba(255,255,255,0.15);  /* subtler */
+  }
+  
+  /* select arrow placeholder still OK */
+  #sidebar select{padding-right:2.2em;background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg width='10' height='6' ...%3E");background-repeat:no-repeat;background-position:right 0.6em center;}
+  
+  /* ─── 7. Range Slider ──────────────────────────────────────────── */
+  #sidebar input[type="range"]{-webkit-appearance:none;height:3px;background:var(--foreground);border-radius:var(--control-radius);}
+  #sidebar input[type="range"]::-webkit-slider-thumb,
+  #sidebar input[type="range"]::-moz-range-thumb{
+    -webkit-appearance:none;height:12px;width:12px;   /* smaller knob */
+    background:var(--foreground);border:none;border-radius:50%;cursor:pointer;
+  }
+  
+  /* ─── 8. Button Groups & Status ─────────────────────────────────── */
+  .button-group-stacked{display:flex;flex-direction:column;gap:0.6rem;}
+  .button-group-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;}
+  #status{
+    margin-top:auto;padding:0.6rem 0.9rem;text-align:center;font-size:0.75rem;
+    border:1px solid var(--foreground);border-radius:var(--container-radius);letter-spacing:0.04em;
+  }
+  
+  /* ─── 9. SVG / Canvas ───────────────────────────────────────────── */
+  svg{touch-action:none;user-select:none;}
+  
+  .vertex{fill:var(--foreground);opacity:0.85;cursor:pointer;transition:fill var(--transition),opacity var(--transition);}
+  .vertex.active{fill:var(--accent);opacity:1;}
+  
+  .tempLine{stroke:var(--accent);stroke-width:1.5;pointer-events:none;}   /* thinner */
+  .polygon{stroke:var(--foreground);stroke-width:0.8;fill-opacity:0.15;pointer-events:none;}
+  .polygon.selected{stroke:var(--accent);stroke-width:1.5;fill-opacity:0.45;}
+  .polygon.clip{fill-opacity:0.65;stroke:var(--background);stroke-width:0.8;opacity:0.5;}
+  
+  .meshLine{stroke:var(--foreground);stroke-width:0.8;opacity:0.18;pointer-events:none;}
+  .guideLine{stroke:var(--accent);stroke-width:0.8;stroke-dasharray:6 4;pointer-events:none;}
+  .frame{fill:none;stroke:var(--foreground);stroke-width:0.8;cursor:move;}
+  
+  #gridSvg{height:100%;}
+  
+
+
+
+
+  /* 0️⃣  Global page gutter  */
+body{
+    padding:0.75rem;          /* keeps every card off the viewport edge */
+  }
+  
+  /* 1️⃣  Sidebar already has 1.1 rem internal padding from earlier  */
+  
+  /* 2️⃣  SVG card: same style as sections + internal scroll          */
+
+ 
+  /* SVG “card” keeps the rounded mask + scroll */
+
+
+
+
+
+  /* make #container the positioning root */
+#container{display:flex;height:100%;overflow:hidden;position:relative;}
+
+/* scrollable SVG card (unchanged) */
+
+
+
+/* 
+
+#svgWrap{flex:1;margin-left:0.75rem;background:var(--background);
+  border:1px solid var(--foreground);border-radius:var(--container-radius);
+  overflow:auto;}
+
+
+ */
+
+
+
+
+/* scrollable SVG card */
+#svgWrap{
+    flex:1;
+    margin-left:0.75rem;
+    background:var(--background);
+    border:1px solid var(--foreground);
+    border-radius:var(--container-radius);
+    overflow:auto;          /* keep native scrollbars */
+    /* remove flex centring */
+  }
+  
+  #canvasInner{ flex:none; } /* keep intrinsic size */
+  
+
+
+
+
+/* 🎯  HUD = absolute overlay pinned to container edges */
+.zoom-hud{
+  position:absolute;
+  top:0.75rem;               /* distance from viewport edge */
+  right:0.75rem;
+  display:flex;flex-direction:column;gap:0.35rem;
+  z-index:1000;
+  pointer-events:auto;
+}
+.zoom-hud button{
+  width:2rem;height:2rem;font-size:1rem;line-height:1;
+  background:var(--background);color:var(--foreground);
+  border:1px solid var(--foreground);border-radius:var(--control-radius);
+  cursor:pointer;
+}
+.zoom-hud button:hover,
+.zoom-hud button:active{background:var(--foreground);color:var(--background);}
+
+
+
+/* make every range control obey the sidebar’s two-tone colors */
+#sidebar input[type="range"]{
+    accent-color: var(--background);     /* modern Chrome, Edge, Firefox */
+  }
+  
+  /* you already have these vendor rules, but keep them for full control */
+  #sidebar input[type="range"]::-webkit-slider-thumb,
+  #sidebar input[type="range"]::-moz-range-thumb{
+    background: var(--foreground);
+  }
+  
+
+
+  /* button baseline (same as before) */
+.lock-btn { color: var(--foreground); }
+
+/* baseline: button shows CLOSED icon, hides OPEN */
+.icon-lock-open  { display:none; }
+.icon-lock-closed{ display:inline; }
+
+/* when .locked, swap them */
+.lock-btn.locked .icon-lock-closed{ display:none; }
+.lock-btn.locked .icon-lock-open  { display:inline; }
+
+/* optional: tint when locked */
+.lock-btn.locked{ color:var(--accent); }
+
+
+/* 2-a  Remove default spinners (all browsers) */
+input[type="number"]{
+    -moz-appearance:textfield;           /* Firefox */
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button{
+    -webkit-appearance:none; margin:0;   /* Chrome / Safari / Edge */
+  }
+  
+  /* 2-b  Flex wrapper */
+  .num-control{
+    display:flex;
+    position:relative;
+    width:100%;
+   gap:2px;
+    border-radius:var(--control-radius);
+    overflow:hidden;                     /* clips button borders */
+  }
+  
+  /* 2-c  Input fills most of the width, no duplicate border */
+  .num-control input{
+    flex:1 1 auto;
+    border:none;                         /* already have wrapper border */
+    background:var(--background);
+    color:var(--foreground);
+    padding:0.55em 0.8em;
+    font-size:0.85rem;
+    outline:none;
+  }
+  
+  /* 2-d  Custom +/- buttons */
+  .num-btn{
+    flex:0 0 2rem;                       /* fixed square */
+    display:flex;align-items:center;justify-content:center;
+    background:var(--background);
+    color:var(--foreground);
+    border-left:1px solid var(--foreground);
+    font-size:0.9rem;
+    cursor:pointer;
+  }
+  
+  .num-btn:hover,
+  .num-btn:focus{
+    background:var(--foreground);
+    color:var(--background);
+  }
+  
+
+ /* hide by default */
+.advanced { display: none !important; }
+
+/* show when body has the class */
+body.show-adv .advanced { display: flex !important; }   /* or block */
+/* simple styling for the toggle button */
+.toggle-adv{
+  margin-top:0.5rem;
+  padding:0.55em 0.8em;
+  width:100%;
+  font-size:0.85rem;
+  background:var(--background);
+  color:var(--foreground);
+  border:1px solid var(--foreground);
+  border-radius:var(--control-radius);
+  cursor:pointer;
+}
+.toggle-adv:hover,
+.toggle-adv:focus{
+  background:var(--foreground);
+  color:var(--background);
+}
+
+
+#swatchRow { display:flex; gap:6px; margin-bottom:6px }
+.swatch    { width:28px; height:28px; border:none; cursor:pointer;
+             outline:1px solid #555; border-radius:4px; }
+.swatch:focus-visible { outline:2px solid #000 }
+
+.swatch         { width:28px; height:28px; border:none; cursor:pointer;
+    outline:2px solid #555; border-radius:4px; }
+.swatch.active  { outline:3px solid #222; }   /* selected swatch */
+
+/* ui/styles.css (or your main stylesheet) */
+.selected-outline {
+    stroke: #ff0070;          /* highlight colour */
+    stroke-width: 1px;
+    stroke-dasharray: 4 2;    /* dotted */
+  }
+
+
+  .invisible {
+    display: none !important;
+  }

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tri-Grid Polygon Drawer</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+ <div id="container">
+ <!-- 
+    <aside id="sidebar">
+      <div class="header-controls">
+        <h1 id="appTitle" title="Click to change theme">TRI-GRID DRAW</h1>
+      </div>
+
+      <div class="button-group-stacked">
+        <button id="resetBtn">Reset All</button>
+
+        <div class="section">
+          <p class="section-title">Slice Style</p>
+        
+          <label for="padIn">Padding</label>
+          <div class="num-control">
+            <input id="padIn" type="number" min="0" step="1" value="10">
+            <button class="num-btn minus" aria-label="decrease">−</button>
+            <button class="num-btn plus"  aria-label="increase">＋</button>
+          </div>
+        
+          <label for="radIn">Corner Radius</label>
+          <div class="num-control">
+            <input id="radIn" type="number" min="0" step="1" value="4">
+            <button class="num-btn minus" aria-label="decrease">−</button>
+            <button class="num-btn plus"  aria-label="increase">＋</button>
+          </div>
+        </div>
+
+      </div>
+      <div class="section">
+        <p class="section-title">Grid</p>
+        <label for="densityRange">
+          Density: <span id="densityVal">1.5</span>
+        </label>
+        <input
+          type="range" id="densityRange"
+          min="1" max="3" step="0.5"
+          value="1.5"
+        >
+      </div>
+
+     
+
+
+<div class="section">
+  <p class="section-title">Frame</p>
+
+  <label for="ratioSel">Aspect Ratio</label>
+  <select id="ratioSel">
+    <option value="1:1">1 : 1</option>
+    <option value="4:5">4 : 5</option>
+    <option value="16:9">16 : 9</option>
+    <option value="9:16">9 : 16</option>
+  </select>
+
+  <label for="wMult">Width Multiplier</label>
+  <div class="num-control">
+    <input id="wMult" type="number" min="1" step="1" value="4">
+    <button class="num-btn minus" aria-label="decrease">−</button>
+    <button class="num-btn plus"  aria-label="increase">＋</button>
+  </div>
+
+  <label for="hMult">Height Multiplier</label>
+  <div class="num-control">
+    <input id="hMult" type="number" min="1" step="1" value="4">
+    <button class="num-btn minus" aria-label="decrease">−</button>
+    <button class="num-btn plus"  aria-label="increase">＋</button>
+  </div>
+</div>
+>
+
+      <div class="section">
+        <p class="section-title">Frame Placement</p>
+        <div class="button-group-grid">
+          <button data-v="top">Top</button>
+          <button data-v="center">V</button>
+          <button data-v="bottom">Btm</button>
+          <button data-h="left">Left</button>
+          <button data-h="center">H</button>
+          <button data-h="right">Right</button>
+        </div>
+      </div>
+    </aside>
+ -->
+
+
+
+
+
+ <aside id="sidebar">
+  <!-- ① Title -->
+  <div class="header-controls">
+    <h1 id="appTitle" title="Click to change theme">FINH Tool 02</h1>
+  </div>
+
+  <!-- ② Always-visible controls -->
+  <div class="button-group-stacked">
+    <button id="resetBtn">Reset All</button>
+    <button id="downloadSvgBtn">Download SVG</button>
+    <button id="downloadSvgAndMeshBtn">Download SVG + Mesh</button>
+  </div>
+
+  <!-- Slice-style controls -->
+<div class="section">
+  <p class="section-title">Slice&nbsp;Style</p>
+
+  <!-- Padding (%) ---------------------------------------------->
+  <label for="padIn">Padding&nbsp;(% of triangle side)</label>
+  <div class="num-control">
+    <input  id="padIn"
+            type="number" min="0" max="100" step="1"
+            value="">
+    <button id="padMinus" class="num-btn minus">−</button>
+    
+    <button id="padPlus"  class="num-btn plus">＋</button>
+  </div>
+
+  <!-- Corner radius (px) --------------------------------------->
+  <label for="radIn">Corner&nbsp;Radius&nbsp;(px&nbsp;— leave blank = auto)</label>
+  <div class="num-control">
+    <input  id="radIn"
+    type="number" min="0" step="1"
+    value="">
+    <button id="radMinus" class="num-btn minus">−</button>
+  
+    <button id="radPlus"  class="num-btn plus">＋</button>
+  </div>
+</div>
+
+
+  <!-- ④ Advanced-toggle button -->
+  <button id="toggleAdvanced" class="toggle-adv" aria-expanded="false">
+    Advanced ▼
+  </button>
+
+  <!-- ⑤ Advanced sections (hidden by default) -->
+  <div class="section advanced">
+    <p class="section-title">Grid</p>
+    <label for="densityRange">
+      Density: <span id="densityVal">1.5</span>
+    </label>
+    <input type="range" id="densityRange" min="1" max="3" step="0.5" value="1.5">
+  </div>
+
+  <div class="section advanced">
+    <p class="section-title">Frame</p>
+
+    <label for="ratioSel">Aspect Ratio</label>
+    <select id="ratioSel">
+      <option value="1:1">1 : 1</option>
+      <option value="4:5">4 : 5</option>
+      <option value="16:9">16 : 9</option>
+      <option value="9:16">9 : 16</option>
+    </select>
+
+    <label for="hMult">Height Multiplier</label>
+    <div class="num-control">
+      <input id="hMult" type="number" min="1" step="1" value="7">
+      <button class="num-btn minus">−</button>
+      <button class="num-btn plus">＋</button>
+    </div>
+    <label for="wMult">Width Multiplier</label>
+    <div class="num-control">
+      <input id="wMult" type="number" min="1" step="1" value="7">
+      <button class="num-btn minus">−</button>
+      <button class="num-btn plus">＋</button>
+    </div>
+
+
+    
+  </div>
+
+  <div class="section advanced">
+    <p class="section-title">Colors</p>
+  <div id="swatchRow" style="display:flex;gap:6px;margin-bottom:6px"></div>
+  <input id="newColourIn" type="text" placeholder="#rrggbb or hsl()"> 
+  <button id="addColourBtn">Add</button>
+</div>
+  <div class="section advanced">
+    <p class="section-title">Frame Placement</p>
+    <div class="button-group-grid">
+      <button data-v="top">Top</button>
+      <button data-v="center">V</button>
+      <button data-v="bottom">Btm</button>
+      <button data-h="left">Left</button>
+      <button data-h="center">H</button>
+      <button data-h="right">Right</button>
+    </div>
+  </div>
+
+
+
+
+  <div class="section invisible">
+    <p class="section-title">Random</p>
+
+<label>
+  Size&nbsp;(triangles)
+  <input id="randSize" type="number" min="3" max="200" value="25">
+</label>
+<button id="randBtn">Add Blob</button>
+
+<!-- NEW – split selected polygon -->
+
+<label>
+  Parts&nbsp;k
+  <input id="splitK" type="number" min="2" max="12" value="3">
+</label>
+<button id="splitBtn">Split</button>
+
+
+
+</div>
+<button id="debugMaskBtn">Show triMask</button>
+
+
+
+</aside>
+
+
+
+    <div id="svgWrap">
+     
+      <div id="canvasInner">
+        <svg id="gridSvg" width="2000" height="1200">
+          <g id="meshLayer"></g>
+          <g id="polygonLayer"></g>
+          <g id="tempLayer"></g>
+          <g id="frameLayer"></g>
+          <g id="vertexLayer"></g>
+          <g id="axisGuides"></g>
+          <g id="clipLayer"></g>
+          <g id="vertexHitLayer"></g>     <!-- NEW: invisible click targets -->
+
+          <g id="debugMaskLayer" pointer-events="none" opacity="0.45"></g>
+
+        </svg>
+      </div>
+    </div>
+  
+    <div id="zoomHud" class="zoom-hud">
+      <button id="zoomIn">+</button>
+      <button id="zoomOut">−</button>
+    
+      <button id="lockView" class="lock-btn" aria-label="Lock / unlock view">
+        <!-- closed lock -->
+        <svg class="icon-lock-closed" width="16" height="16" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      
+        <!-- open lock -->
+        <svg class="icon-lock-open" width="16" height="16" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0"></path>
+          <line x1="7" y1="11" x2="7" y2="15"></line>
+        </svg>
+      </button>
+      
+
+     
+  </div>
+
+  <script src="https://unpkg.com/polygon-clipping@0.15.3/dist/polygon-clipping.min.js"></script>
+  <script type="module">
+    import { clipWithFrame } from './src/utils/clip-with-frame.js';
+    const pc = window.polygonClipping;   // no import line
+  </script>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
+
+

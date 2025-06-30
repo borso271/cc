@@ -1,0 +1,156 @@
+/* =================================================================== */
+/*               MINIMAL BRUTALIST THEME (THEME-AWARE)                 */
+/* =================================================================== */
+
+/* ─── 1. Theme Palette Definitions ────────────────────────────────── */
+:root {
+  /* Default/fallback theme (Dark) */
+  --background: #000000;
+  --foreground: #ffffff;
+}
+body.theme-light {
+  --background: #fafafa;
+  --foreground: #111111;
+}
+body.theme-solarized {
+  --background: #002b36; /* base */
+  --foreground: #839496; /* text */
+}
+body.theme-dracula {
+  --background: #282a36; /* background */
+  --foreground: #f8f8f2; /* foreground */
+}
+
+/* ─── 2. Global Resets ────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%; margin: 0;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Courier New', Courier, monospace;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* ─── 3. Main Layout ──────────────────────────────────────────────── */
+#container { display: flex; height: 100%; }
+
+#sidebar {
+  width: 260px;
+  background: var(--background);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+#svgWrap {
+  flex: 1;
+  overflow: auto;
+  background: var(--foreground);
+}
+
+/* ─── 4. Header & Typography ──────────────────────────────────────── */
+
+/* FIX: Stack title and button vertically */
+.header-controls {
+  display: flex;
+  flex-direction: column; /* This is the key change for layout */
+  gap: 0.75rem; /* Adds space between the title and button */
+  border-bottom: 1px solid var(--foreground); /* FIX: Use var(--foreground) directly */
+  padding-bottom: 1rem;
+}
+#sidebar h1 {
+  font-size: 1.1rem;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+/* The theme button no longer needs special styling to shrink */
+#sidebar fieldset {
+  /* FIX: Use var(--foreground) directly to ensure visibility */
+  border: 1px solid var(--foreground);
+  padding: 1rem; margin: 0;
+  display: flex; flex-direction: column; gap: 0.75rem;
+}
+#sidebar legend {
+  padding: 0 0.4em; margin-left: 0.5rem;
+  font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;
+}
+#sidebar label {
+  display: flex; flex-direction: column;
+  font-size: 0.85rem; gap: 0.4rem; text-transform: capitalize;
+}
+
+/* ─── 5. Controls (Inputs, Buttons, Select) ───────────────────────── */
+#sidebar input,
+#sidebar button,
+#sidebar select {
+  background: var(--background); color: var(--foreground);
+  /* FIX: Use var(--foreground) directly to ensure visibility */
+  border: 1px solid var(--foreground);
+  padding: 0.6em; font-family: inherit; font-size: 0.9rem;
+  width: 100%; appearance: none; border-radius: 0;
+}
+#sidebar button, #sidebar select { cursor: pointer; }
+#sidebar button:hover, #sidebar button:active {
+  background: var(--foreground); color: var(--background);
+}
+#sidebar select { text-align: left; padding-right: 1em; }
+#sidebar input[type="range"] { padding: 0; border: none; }
+#sidebar input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%; height: 1px; background: var(--foreground);
+}
+#sidebar input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  /* FIX: Use var(--foreground) directly to ensure visibility */
+  border: 1px solid var(--foreground);
+  height: 20px; width: 10px; background: var(--foreground);
+  cursor: pointer; margin-top: -10px;
+}
+#sidebar input[type="range"]::-moz-range-track {
+  width: 100%; height: 1px; background: var(--foreground);
+}
+#sidebar input[type="range"]::-moz-range-thumb {
+  /* FIX: Use var(--foreground) directly to ensure visibility */
+  border: 1px solid var(--foreground);
+  height: 20px; width: 10px;
+  background: var(--foreground); cursor: pointer;
+}
+
+/* ─── 6. Button Groups & Status Bar ───────────────────────────────── */
+.button-group-stacked { display: flex; flex-direction: column; gap: 0.5rem; }
+.button-group-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;
+}
+#status {
+  margin-top: auto; padding: 0.75rem; text-align: center;
+  font-size: 0.8rem;
+  /* FIX: Use var(--foreground) directly to ensure visibility */
+  border: 1px solid var(--foreground);
+  letter-spacing: 0.05em;
+}
+
+#sidebar h1 {
+  font-size: 1.1rem;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer; /* ⭐️ Indicates the title is clickable */
+}
+
+/* ─── 7. THEME-AWARE SVG Canvas Styles ────────────────────────────── */
+svg                  { touch-action:none; user-select:none; }
+.vertex              { fill: var(--background); opacity: 0.7; cursor:pointer; }
+.vertex.active       { fill: var(--background); opacity: 1; }
+.tempLine            { stroke: var(--background); stroke-width:2; pointer-events:none; }
+.polygon             { stroke: var(--background); stroke-width:2; fill-opacity:.15; pointer-events:none; }
+.meshLine            { stroke: var(--background); stroke-width:1; opacity: 0.2; pointer-events:none; }
+.guideLine           { stroke:red; stroke-width:3; stroke-dasharray:10 6; pointer-events:none; }
+.frame               { fill:none; stroke: var(--background); stroke-width:3; cursor:move; }
+polygon.selected     { stroke: var(--background); stroke-width: 3; fill-opacity: 0.5; }
+polygon.clip         { fill-opacity: 0.7; stroke: var(--background); stroke-width: 1; opacity: 0.5; }
