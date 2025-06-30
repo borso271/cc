@@ -17,6 +17,8 @@ function gridLimits (density) {
     };
   }
 
+  /** call immediately after addPolygon() so the new one is both
+ *  selected *and* highlighted. */
 
 export const store = new (class extends EventTarget {
   state = {
@@ -34,8 +36,9 @@ export const store = new (class extends EventTarget {
 
     padRatio    : 0.10,     // fraction of ONE triangle side (0-1)
     radiusPx    : null,     // if null → auto = padPx/2
-
-    selectedId : null
+    preview : false   ,     // ← NEW  presentation-mode flag,
+    selectedId : null,
+    highlightId : null          // ← temporary visual accent
   };
 
     get s() { return structuredClone(this.state); }
@@ -47,6 +50,7 @@ export const store = new (class extends EventTarget {
         /* ---------- selection ---------- */
         selectPolygon(id){
           this.state.selectedId = id;  // id or null
+          this.state.highlightId = null;   // drop accent
           console.log("polygon selected: ",  this.state.selectedId)
            this.emit();
          }
@@ -147,6 +151,25 @@ addPolygon(verts, pose = { q:0, r:0, R:0, F:0 }, fill  = this.state.currentFill 
   this.emit();
   return poly.id;
 }
+
+
+selectAndHighlight(id){
+  this.state.selectedId  = id;
+  this.state.highlightId = id;
+  this.emit();
+}
+
+
+
+
+
+
+addPolygonInstance(poly){
+  this.state.polygons.push(poly);
+  this.emit();
+  return poly.id;
+}
+
 
   
     emit(){ this.dispatchEvent(new Event('change')); }

@@ -340,6 +340,7 @@ export function drawFullGrid () {
       .map(([q,r]) => `${(q+r/2)*SIDE},${r*C.H_FROM_SIDE(SIDE)}`).join(' ');
 
     const outline = document.createElementNS(C.NS,'polygon');
+
     outline.setAttribute('points', pts);
     outline.setAttribute('fill', 'none');
     outline.setAttribute('stroke', poly.fill);
@@ -350,8 +351,17 @@ export function drawFullGrid () {
     outline.addEventListener('pointerdown',
       e => Interactions.onPolyPointerDown(e, poly));
 
+  
+
+
     if (state.selectedId === poly.id)
       outline.classList.add('selected-outline');
+    
+    if (state.highlightId === poly.id)       // accent while “just added”
+      outline.classList.add('just-added');
+
+
+
 
     DOM.polygonLayer.appendChild(outline);
   });
@@ -362,6 +372,11 @@ export function drawFullGrid () {
   DOM.clipLayer.innerHTML = '';
 
   state.polygons.forEach(poly => {
+
+    
+
+
+
     const slices = getSlices(poly, state.frame, SIDE, C.H_FROM_SIDE,
                              padPx, radPx);
 

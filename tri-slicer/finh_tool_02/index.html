@@ -18,6 +18,7 @@
   <!-- ② Always-visible controls -->
   <div class="button-group-stacked">
     <button id="resetBtn">Reset All</button>
+    <button id="tglAll"      class="toggle-btn">Preview</button>
     <button id="downloadSvgBtn">Download SVG</button>
     <button id="downloadSvgAndMeshBtn">Download SVG + Mesh</button>
   </div>
@@ -111,6 +112,13 @@
   </div>
 
 
+  <div class="section advanced">
+    <p class="section-title">Shapes</p>
+
+  <button id="toggleShapes">Pre-defined shapes ▾</button>
+  <div id="shapePanel" class="shape-panel closed"></div>
+
+</div>
 
 
   <div class="section invisible">
@@ -133,6 +141,20 @@
 
 
 </div>
+
+
+<div class="section invisible">
+  <p class="section-title">View layers</p>
+
+  <button id="tglMesh"     class="toggle-btn">Mesh</button>
+  <button id="tglVerts"    class="toggle-btn">Vertices</button>
+  <button id="tglAxis"     class="toggle-btn">Axis</button>
+  <button id="tglOutlines" class="toggle-btn">Polygons</button>
+  <button id="tglAll"      class="toggle-btn">All</button>
+</div>
+
+
+
 <button id="debugMaskBtn">Show triMask</button>
 
 

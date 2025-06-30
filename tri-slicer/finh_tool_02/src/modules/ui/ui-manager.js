@@ -1,11 +1,14 @@
 /* ui.js */
 import { store } from '../../core/store.js';
 import * as C from '../../core/constants.js';
+import { H } from '../../utils.js';
+import * as DOM from '../../core/dom-elements.js';
 
 const sidebar = document.getElementById('sidebar');
 // shorthand query helper
 const qs = (sel, root = document) => root.querySelector(sel);
-                             
+
+
 const K      = 2 / Math.sqrt(3);   // multiply H-units by K  →  SIDE-units
 const K_INV  = Math.sqrt(3) / 2;   // multiply SIDE-units by K_INV → H-units
 
@@ -360,3 +363,294 @@ document.getElementById('downloadSvgAndMeshBtn').onclick = () => {
   a.click();
   URL.revokeObjectURL(url);
 };
+
+
+
+
+const toggleBtn  = sidebar.querySelector('#toggleShapes');
+const shapePanel = sidebar.querySelector('#shapePanel');
+
+toggleBtn.onclick = () => {
+  shapePanel.classList.toggle('closed');
+  toggleBtn.textContent =
+    shapePanel.classList.contains('closed')
+      ? 'Pre-defined shapes ▾'
+      : 'Pre-defined shapes ▴';
+};
+
+
+
+/* ------------------------------------------------------------------ */
+/* layer-toggle helpers                                               */
+/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------ */
+/* layer-toggle helpers                                         */
+/* ------------------------------------------------------------ */
+const LAYERS = {
+  mesh     : DOM.meshLayer,
+  verts    : DOM.vertexLayer,
+  axis     : DOM.axisGroup,
+  outlines : DOM.polygonLayer
+};
+
+/* ---- individual toggles ------------------------------------ */
+[
+  { id:'#tglMesh',     key:'mesh'     },
+  { id:'#tglVerts',    key:'verts'    },
+  { id:'#tglAxis',     key:'axis'     },
+  { id:'#tglOutlines', key:'outlines' }
+].forEach(({id,key})=>{
+  const btn   = sidebar.querySelector(id);
+  const layer = LAYERS[key];
+
+  btn.classList.add('active');              // initial = visible
+
+  btn.onclick = ()=>{
+    const hidden = layer.classList.toggle('hidden-layer');
+    btn.classList.toggle('active', !hidden);
+    syncAllBtnState();                      // keep “All” in sync
+  };
+});
+
+/* ---- “All” toggle ------------------------------------------ */
+const allBtn = sidebar.querySelector('#tglAll');
+allBtn.classList.add('active');             // everything visible
+
+function syncAllBtnState(){
+  const anyHidden = Object.values(LAYERS)
+                    .some(l => l.classList.contains('hidden-layer'));
+  allBtn.classList.toggle('active', !anyHidden);
+}
+
+allBtn.onclick = ()=>{
+  // If ANY target layer is hidden → show all, else hide all.
+  const shouldShow = Object.values(LAYERS)
+                     .some(l => l.classList.contains('hidden-layer'));
+  Object.entries(LAYERS).forEach(([key,layer])=>{
+    layer.classList.toggle('hidden-layer', !shouldShow);
+    const btn = sidebar.querySelector(`#tgl${key[0].toUpperCase()+key.slice(1)}`);
+    btn.classList.toggle('active', shouldShow);
+  });
+  allBtn.classList.toggle('active', shouldShow);
+};
+
+
+
+
+
+
+/* ------------------------------------------------------------------ */
+/* shape library                                              */
+/* ------------------------------------------------------------------ */
+import { SHAPE_LIBRARY } from '../../library/shapes.js';
+
+
+
+/* build thumbnail list once */
+SHAPE_LIBRARY.forEach(item => {
+  const div = document.createElement('div');
+  div.className = 'shape-thumb';
+  div.innerHTML = `<svg viewBox="0 0 24 24">${item.svg}</svg>`;
+  div.title = item.name;
+  div.onclick = () => {
+    const poly = item.create();
+
+    /* drop it in the centre of the current frame            */
+    const f      = store.state.frame;
+    const density= store.state.density;
+    const SIDE   = C.BASE_SIDE / density;
+    const rowH   = H(SIDE);
+
+    // frame centre in axial coords (approx)
+    poly.pose.q = Math.round((f.x + f.widthMult*SIDE /2) / SIDE
+                             - (f.y + f.heightMult*rowH /2) / (2*SIDE));
+    poly.pose.r = Math.round((f.y + f.heightMult*rowH /2) / rowH);
+
+    store.addPolygonInstance(poly);   // new helper (see §4)
+    store.selectAndHighlight(poly.id);    
+
+    shapePanel.classList.add('closed');
+    toggleBtn.textContent = 'Pre-defined shapes ▾';
+  };
+  shapePanel.appendChild(div);
+});
+
+
+
+/* ------------------------------------------------------------------
+   ONE-CLICK “📋 Export selected shape” button
+   – Logs a ready-to-paste library snippet *with* a 24 × 24 preview.
+   ------------------------------------------------------------------ */
+   sidebar.insertAdjacentHTML(
+    'beforeend',
+    `<button id="exportShapeBtn" style="margin-top:.5rem">📋 Export selected shape</button>`
+  );
+  
+  const exportBtn = sidebar.querySelector('#exportShapeBtn');
+  
+  /* Enable/disable with selection ----------------------------------- */
+  store.addEventListener('change', () => {
+    exportBtn.disabled = (store.state.selectedId == null);
+  });
+  
+  /* ---- little helpers --------------------------------------------- */
+  const min = arr => Math.min(...arr);
+  const max = arr => Math.max(...arr);
+  
+  /* ---- main click handler ----------------------------------------- */
+  exportBtn.onclick = () => {
+    const id = store.state.selectedId;
+    if (id == null) return;
+    const poly = store.state.polygons.find(p => p.id === id);
+    if (!poly)     return;
+  
+    /* 1 · canonical local vertices */
+    const verts = [];
+    for (let i = 0; i < poly.verts.length; i += 2)
+      verts.push([poly.verts[i], poly.verts[i + 1]]);
+  
+    /* 2 · auto-generate 24×24 preview ------------------------------- */
+    const vertsAxial = [...poly.vertices()].slice(0, -1);   // no dup
+    const px   = vertsAxial.map(([q, r]) => [q + r / 2, r * Math.sqrt(3) / 2]);
+    const xs   = px.map(v => v[0]), ys = px.map(v => v[1]);
+    const w    = max(xs) - min(xs), h = max(ys) - min(ys);
+    const scl  = 22 / Math.max(w, h);                       // 1-px margin
+    const offX = (24 - w * scl) / 2 - min(xs) * scl;
+    const offY = (24 - h * scl) / 2 - min(ys) * scl;
+  
+    const ptsAttr = px
+      .map(([x, y]) => `${(x * scl + offX).toFixed(2)},${(y * scl + offY).toFixed(2)}`)
+      .join(' ');
+  
+    const previewSvg =
+      `<svg viewBox="0 0 24 24"><polygon points="${ptsAttr}" /></svg>`;
+  
+    /* 3 · build ready-to-paste snippet ----------------------------- */
+    const snippet = `
+  {
+    id   : 'myShape',
+    name : 'My Shape',
+    svg  : \`${previewSvg}\`,
+    create(){
+      return new Polygon(${JSON.stringify(verts)}, { q:0,r:0,R:0,F:0 }, '${poly.fill}');
+    }
+  }`;
+  
+
+    /* 4 · output ---------------------------------------------------- */
+    console.group('📋 Shape export');
+    console.log(snippet.trim());
+    console.groupEnd();
+    console.info('👉 Copy the above object into library/shapes.js');
+  };
+  
+
+// /* ---------- Log-shape helper ---------------------------------- */
+// sidebar.insertAdjacentHTML(
+//   'beforeend',
+//   `<button id="logShapeBtn" style="margin-top:.5rem">📋 Log selected shape</button>`
+// );
+
+
+
+// const logBtn = sidebar.querySelector('#logShapeBtn');
+
+
+
+// sidebar.insertAdjacentHTML(
+//   'beforeend',
+//   `<button id="makePreviewBtn" style="margin-top:.25rem">🖼 Preview markup</button>`
+// );
+
+// const previewBtn = sidebar.querySelector('#makePreviewBtn');
+
+// /* Enable only when a polygon is selected */
+// store.addEventListener('change', () => {
+//   const sel = store.state.selectedId;
+//   previewBtn.disabled = (sel == null);
+// });
+
+
+
+
+// /* Disable when nothing selected */
+// store.addEventListener('change', () => {
+//   logBtn.disabled = (store.state.selectedId == null);
+// });
+
+
+// logBtn.onclick = () => {
+//   const id = store.state.selectedId;
+//   if (id == null){
+//     console.warn('No polygon selected');
+//     return;
+//   }
+//   const poly = store.state.polygons.find(p => p.id === id);
+//   if (!poly) return;
+
+//   /* 1 · verts as [[q,r],…] in canonical local coords ------------- */
+//   const verts = [];
+//   for (let i = 0; i < poly.verts.length; i += 2)
+//     verts.push([poly.verts[i], poly.verts[i+1]]);
+
+//   /* 2 · build a minimal library snippet ------------------------- */
+//   const snippet = `
+// {
+//   id   : 'myShape',
+//   name : 'My Shape',
+//   svg  : '<!-- add a neat 24×24 preview here -->',
+//   create(){
+//     return new Polygon(${JSON.stringify(verts)}, { q:0,r:0,R:0,F:0 }, '${poly.fill}');
+//   }
+// }`;
+
+//   /* 3 · log for copy-paste -------------------------------------- */
+//   console.group('Shape snippet');
+//   console.log(snippet.trim());
+//   console.groupEnd();
+//   console.info('👉 Copy the above object into library/shapes.js');
+// };
+
+
+
+// /* ---- tiny helper: min/max of arrays ------------------------- */
+// const min = arr => Math.min(...arr);
+// const max = arr => Math.max(...arr);
+
+// previewBtn.onclick = () => {
+//   const id   = store.state.selectedId;
+//   if (id == null) return;
+//   const poly = store.state.polygons.find(p => p.id === id);
+//   if (!poly)  return;
+
+//   /* 1 · polygon outline in lattice ----------------------------- */
+//   const vertsAxial = [...poly.vertices()].slice(0,-1);      // no dup
+
+//   /* 2 · convert to raw pixel coords (using SIDE = 1) ----------- */
+//   // SIDE = 1 → row height = √3/2
+//   const pxVerts = vertsAxial.map(([q,r]) => [
+//     q + r/2,
+//     r * Math.sqrt(3)/2
+//   ]);
+
+//   /* 3 · find bbox, scale & centre into 24×24 ------------------- */
+//   const xs = pxVerts.map(v=>v[0]), ys = pxVerts.map(v=>v[1]);
+//   const w  = max(xs) - min(xs);
+//   const h  = max(ys) - min(ys);
+//   const scale  = 22 / Math.max(w,h);           // leave 1-px margin
+//   const offX   = (24 - w*scale) / 2 - min(xs)*scale;
+//   const offY   = (24 - h*scale) / 2 - min(ys)*scale;
+
+//   const ptsAttr = pxVerts
+//       .map(([x,y]) => `${(x*scale+offX).toFixed(2)},${(y*scale+offY).toFixed(2)}`)
+//       .join(' ');
+
+//   const previewSvg =
+// `<svg viewBox="0 0 24 24"><polygon points="${ptsAttr}" /></svg>`;
+
+//   /* 4 · show in console for copy-paste ------------------------- */
+//   console.group('SVG preview');
+//   console.log(previewSvg);
+//   console.groupEnd();
+//   console.info('👉 Copy the <svg>…</svg> markup into the "svg" field.');
+// };

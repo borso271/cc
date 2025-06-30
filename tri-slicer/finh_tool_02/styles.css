@@ -309,3 +309,60 @@ body.show-adv .advanced { display: flex !important; }   /* or block */
   .invisible {
     display: none !important;
   }
+
+
+
+  .shape-panel {
+    max-height: 160px;           /* collapsed height = 0 */
+    overflow-x: auto;
+    white-space: nowrap;
+    transition: max-height .25s;
+    border-top: 1px solid var(--foreground);
+    padding: .5rem 0;
+  }
+  .shape-panel.closed { max-height: 0; padding: 0; }
+  
+  .shape-thumb {
+    width: 48px; height: 48px;
+    display: inline-block;
+    margin: 0 .25rem;
+    border: 1px solid var(--foreground);
+    border-radius: 4px;
+    background: var(--background);
+    cursor: pointer;
+  }
+  .shape-thumb svg { width: 100%; height: 100%; fill: currentColor; }
+  
+
+  .selected-outline { stroke-width: 2; }
+
+.just-added {
+  stroke: var(--accent, orange);
+  stroke-width: 3;
+  stroke-dasharray: 4 2;
+  animation: pulse 0.8s ease-out 3 both;
+}
+
+@keyframes pulse {
+  0%   { stroke-opacity: 0; }
+  40%  { stroke-opacity: 1; }
+  100% { stroke-opacity: .4; }
+}
+
+
+/* in styles.css (or <style>) */
+.hidden-layer { display:none; }
+.toggle-btn   { width:100%; margin:.25rem 0; }
+.toggle-btn.active { background:#222; color:#fff; }
+
+
+/* sidebar-buttons already use .active — reuse it for visibility */
+svg .hidden { display:none }
+
+/* accent frame shown only in preview */
+.preview-frame {
+  fill:none;
+  stroke:black;
+  stroke-width:1.5;
+  pointer-events:none;   /* never capture clicks */
+}
